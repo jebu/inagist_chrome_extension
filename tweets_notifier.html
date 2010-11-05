@@ -33,13 +33,13 @@
   }
 
   function renderUrl(url, container) {
-    var url = url.url;
-    var title = url.title?url.title:url.url;
-    var description = twitterlib.ify.clean(url.description?url.description:url.url);
+    var link = url.url;
+    var title = url.title?url.title:link;
+    var description = twitterlib.ify.clean(url.description?url.description:link);
     var uimage = url.attributes.image_src?url.attributes.image_src:"/img/inagist19.png";
     var tweet = jQuery("<div></div>").addClass("tweet");
     var image = jQuery("<img src='" + uimage +"' />");
-    var name = jQuery("<span><a href='" + url + "'>" + title +"</a></span>").addClass("name");
+    var name = jQuery("<span><a href='" + link + "'>" + title +"</a></span>").addClass("name");
     var text = jQuery("<span>" + description +"</span>").addClass("text");
     tweet.append(image).append(name).append("<br/>").append(text).append("<div style='clear: both;'></div>");
     container.append(tweet);
