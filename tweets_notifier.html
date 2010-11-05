@@ -23,7 +23,7 @@
 
     var tweet = jQuery("<div></div>").addClass("tweet");
     var image = jQuery("<img src='" + userImage +"' />");
-    var name = jQuery("<span>" + screenName +"</span>").addClass("name");
+    var name = jQuery("<span><a href='http://twitter.com/" + screenName + "'>" + screenName +"</a></span>").addClass("name");
     var text = jQuery("<span>" + tweetText +"</span>").addClass("text");
     var footer = jQuery("<span><a href='http://twitter.com/" + screenName + "/status/" + 
                         tweetId + "'>" + createdAt +"</a></span>").addClass("timestamp");
@@ -33,12 +33,13 @@
   }
 
   function renderUrl(url, container) {
+    var url = url.url;
     var title = url.title?url.title:url.url;
     var description = twitterlib.ify.clean(url.description?url.description:url.url);
     var uimage = url.attributes.image_src?url.attributes.image_src:"/img/inagist19.png";
     var tweet = jQuery("<div></div>").addClass("tweet");
     var image = jQuery("<img src='" + uimage +"' />");
-    var name = jQuery("<span>" + title +"</span>").addClass("name");
+    var name = jQuery("<span><a href='" + url + "'>" + title +"</a></span>").addClass("name");
     var text = jQuery("<span>" + description +"</span>").addClass("text");
     tweet.append(image).append(name).append("<br/>").append(text).append("<div style='clear: both;'></div>");
     container.append(tweet);
@@ -60,9 +61,9 @@
     var notification = notificationQueue.pop();
     if (notification) {
       if (notification.trending_personal_phrase) {
+        notification.trending_channel_phrase.channel=Options.get("userid");
         renderTrendAlert(notification.trending_personal_phrase, $(document.body));
       } else if (notification.trending_channel_phrase) {
-        notification.trending_channel_phrase.channel=Options.get("userid");
         renderTrendAlert(notification.trending_channel_phrase, $(document.body));
       } else if (notification.lookedup_url) {
         renderUrl(notification.lookedup_url, $(document.body));
