@@ -1,0 +1,132 @@
+<html>
+<head>
+<script type="text/javascript" src="lib/3rdparty/jquery.js"></script>
+<script type="text/javascript" src="lib/options.js"></script>
+<script type="text/javascript" src="lib/utils.js"></script>
+<script>
+function show(message, image, title) {
+  title = title ? title : "inagist.com";
+  image = image ? image : 'img/inagist48.png';
+  var notification = webkitNotifications.createNotification(
+    image,                      // The image.
+    title, // The title.
+    message      // The body.
+  );
+  notification.show();
+  if (Options.get("autoClose")) {
+    var closeTimer = setTimeout(function() {
+      notification.cancel();
+    }, Options.get("alertTimeout"));
+    notification.onclick = function() {
+      clearTimeout(closeTimer)
+    };
+  }
+}
+
+function showHtml() {
+  var notification = webkitNotifications.createHTMLNotification(
+    'tweets_notifier.html'
+  );
+  notification.show();
+  if (Options.get("autoClose")) {
+    var closeTimer = setTimeout(function() {
+      notification.cancel();
+    }, Options.get("alertTimeout"));
+    notification.onclick = function() {
+      clearTimeout(closeTimer)
+    };
+  }
+}
+
+function iconAlert(Color, Text) {
+  chrome.browserAction.setBadgeBackgroundColor({color: Color});
+  chrome.browserAction.setBadgeText({text: Text});
+}
+
+function setToolTip(Text) {
+  chrome.browserAction.setTitle({title: Text});
+}
+
+function connect() {
+  if ("WebSocket" in window) {
+    ws = new WebSocket(Options.get("websocketURL"));
+    
+    ws.onopen = function() {
+      // Web Socket is connected. You can send data by send() method.
+      ws.send("stream " + connectedUser);
+    };
+
+    ws.onmessage = function (evt)
+    {
+      var data = evt.data;
+      var eventObj = JSON.parse(data);
+      if (eventObj.error){
+        show("Error " + eventObj.error);
+      } else if (eventObj.status == "connected") {
+        iconAlert([10, 200, 10, 228], "On");
+        setToolTip("inagist.com - " + connectedUser);
+      } else if (eventObj.trending_personal_phrase) {
+        var trendText = eventObj.trending_personal_phrase.phrase;
+        notificationQueue.push(eventObj);
+        showHtml();
+        ws.send("tweet " + eventObj.trending_personal_phrase.id);
+      } else if (eventObj.trending_channel_phrase) {
+        var trendText = eventObj.trending_channel_phrase.phrase;
+        var channelName = eventObj.trending_channel_phrase.channel;
+        notificationQueue.push(eventObj);
+        showHtml();
+        ws.send("tweet " + eventObj.trending_channel_phrase.id);
+      } else if (eventObj.tweet_archived) {
+        var tweet = eventObj.tweet_archived;
+        ws.send("tweet " + tweet.id);
+        if (tweet.url) {
+          ws.send("url " + tweet.url);
+        }
+      } else if (eventObj.lookedup_url) {
+        if (eventObj.lookedup_url.title && eventObj.lookedup_url.description) {
+          notificationQueue.push(eventObj);
+          showHtml();
+        }
+      } else if (eventObj.lookedup_tweet) {
+        notificationQueue.push(eventObj);
+        showHtml();
+      }
+    };
+
+    ws.onclose = function()
+    {
+      iconAlert([200, 10, 10, 228], "Off");
+      setToolTip("inagist.com");
+    };
+  } else {
+    show("You have no web sockets");
+  };
+}
+
+function disconnect() {
+  ws.close();
+}
+
+function toggleConnection() {
+  if (ws.readyState === 2) {
+    connectedUser = Options.get("userid");
+    connect();
+  } else {
+    disconnect();
+  }
+}
+
+Options.init();
+
+var notificationQueue = [];
+var ws = null;
+var connectedUser = Options.get("userid");
+
+chrome.browserAction.onClicked.addListener(toggleConnection);
+iconAlert([200, 10, 10, 228], "Off");
+connect();
+</script>
+</head>
+<body>
+</body>
+</html>

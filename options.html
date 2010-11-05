@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="lib/3rdparty/jquery.js"></script>
+
+<title>inagist.com Options</title>
+</head>
+<body>
+  <h1> inagist.com Options </h1>
+  <div>
+    <table>
+      <tr>
+        <td>User Id : </td>
+        <td><input type="text" name="iconnecteduser" onChange="saveValues();"/></td>
+      </tr>
+      <tr>
+        <td>Alert Time : </td>
+        <td><input type="text" name="ialerttime" onChange="saveValues();"/></td>
+      </tr>
+      <tr>
+        <td>Auto Close : </td>
+        <td><input type="checkbox" name="iautoclose" onChange="saveValues();"/></td>
+      </tr>
+    </table>
+  </div>
+<script>
+  var Options = chrome.extension.getBackgroundPage().Options;
+  $("input[name='iconnecteduser']")[0].value = Options.get("userid");
+  $("input[name='ialerttime']")[0].value = Options.get("alertTimeout");
+  $("input[name='iautoclose']")[0].checked = Options.get("autoClose");
+  function saveValues() {
+    Options.set("userid", $("input[name='iconnecteduser']")[0].value);
+    Options.set("alertTimeout", $("input[name='ialerttime']")[0].value);
+    Options.set("autoClose", $("input[name='iautoclose']")[0].checked);
+  }
+</script>
+</body>
+</html>

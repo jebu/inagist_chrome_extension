@@ -1,0 +1,38 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+.tweet {
+  font-size: 9pt;
+  background-color: #eeeeee;
+  margin: 2px;
+}
+
+.tweet img {
+  float: left;
+  height: 48px;
+  width: 48px;
+  margin-right: 4px;
+  margin-top: 4px;
+}
+
+.tweet .name {
+  color: #666;
+  font-weight: bold;
+}
+
+.tweet .text {
+  clear: right;
+}
+
+.tweet .timestamp {
+  clear: right;
+  font-size: 6pt;
+}
+
+.tweet .timestamp a {
+  text-decoration: none;
+}
