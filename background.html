@@ -60,19 +60,18 @@ function connect() {
     {
       var data = evt.data;
       var eventObj = JSON.parse(data);
+      if (Options.get("debug"))
+        console.log(data);
       if (eventObj.error){
         show("Error " + eventObj.error);
       } else if (eventObj.status == "connected") {
         iconAlert([10, 200, 10, 228], "On");
         setToolTip("inagist.com - " + connectedUser);
       } else if (eventObj.trending_personal_phrase) {
-        var trendText = eventObj.trending_personal_phrase.phrase;
         notificationQueue.push(eventObj);
         showHtml();
         ws.send("tweet " + eventObj.trending_personal_phrase.id);
       } else if (eventObj.trending_channel_phrase) {
-        var trendText = eventObj.trending_channel_phrase.phrase;
-        var channelName = eventObj.trending_channel_phrase.channel;
         notificationQueue.push(eventObj);
         showHtml();
         ws.send("tweet " + eventObj.trending_channel_phrase.id);

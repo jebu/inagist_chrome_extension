@@ -61,7 +61,7 @@
     var notification = notificationQueue.pop();
     if (notification) {
       if (notification.trending_personal_phrase) {
-        notification.trending_channel_phrase.channel=Options.get("userid");
+        notification.trending_personal_phrase.channel=Options.get("userid");
         renderTrendAlert(notification.trending_personal_phrase, $(document.body));
       } else if (notification.trending_channel_phrase) {
         renderTrendAlert(notification.trending_channel_phrase, $(document.body));
