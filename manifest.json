@@ -8,6 +8,7 @@
   "permissions": [
     "notifications",
     "tabs",
+    "idle",
     "http://*/*",
     "https://*/*"
   ],

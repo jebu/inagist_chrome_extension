@@ -54,6 +54,7 @@ function connect() {
     ws.onopen = function() {
       // Web Socket is connected. You can send data by send() method.
       ws.send("stream " + connectedUser);
+      ws.send("setlimit tweet_archived_limit " + Options.get("tweet_archived_limit"));
     };
 
     ws.onmessage = function (evt)
@@ -107,7 +108,7 @@ function disconnect() {
 }
 
 function toggleConnection() {
-  if (ws.readyState === 2) {
+  if (ws.readyState === ws.CLOSED) {
     connectedUser = Options.get("userid");
     connect();
   } else {
@@ -116,6 +117,9 @@ function toggleConnection() {
 }
 
 Options.init();
+chrome.idle.onStateChanged.addListener(function(newState){
+  console.log("State changed to " + newState);
+});
 
 var notificationQueue = [];
 var ws = null;
