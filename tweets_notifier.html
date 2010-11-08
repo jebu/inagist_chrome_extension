@@ -13,7 +13,7 @@
   <script>
   var notificationQueue = chrome.extension.getBackgroundPage().notificationQueue;
   var Options = chrome.extension.getBackgroundPage().Options;
-
+  
   function renderTweet(tweet, container) {
     var screenName = tweet.user.screen_name;
     var userImage = tweet.user.profile_image_url;
@@ -23,7 +23,8 @@
 
     var tweet = jQuery("<div></div>").addClass("tweet");
     var image = jQuery("<img src='" + userImage +"' />");
-    var name = jQuery("<span><a href='http://twitter.com/" + screenName + "'>" + screenName +"</a></span>").addClass("name");
+    var name = jQuery("<span><a href='http://twitter.com/" + screenName + 
+                      "'>" + screenName +"</a></span>").addClass("name");
     var text = jQuery("<span>" + tweetText +"</span>").addClass("text");
     var footer = jQuery("<span><a href='http://twitter.com/" + screenName + "/status/" + 
                         tweetId + "'>" + createdAt +"</a></span>").addClass("timestamp");
@@ -75,5 +76,16 @@
   </script>
 </head>
 <body>
+   <script>
+     var _gaq = _gaq || [];
+     _gaq.push(['_setAccount', 'UA-16053252-4']);
+     _gaq.push(['_trackPageview']);
+
+     (function() {
+       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+       ga.src = 'https://ssl.google-analytics.com/ga.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+     })();
+   </script>
 </body>
 </html>
