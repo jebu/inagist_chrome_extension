@@ -27,7 +27,6 @@ function showHtml() {
   var notification = webkitNotifications.createHTMLNotification(
     'tweets_notifier.html'
   );
-  notification.show();
   if (Options.get("autoClose")) {
     var closeTimer = setTimeout(function() {
       notification.cancel();
@@ -36,6 +35,7 @@ function showHtml() {
       clearTimeout(closeTimer)
     };
   }
+  notification.show();
 }
 
 function iconAlert(Color, Text) {
@@ -98,6 +98,13 @@ function connect() {
       iconAlert([200, 10, 10, 228], "Off");
       setToolTip("inagist.com");
     };
+
+    ws.onerror = function() {
+      // reconnect on error
+      disconnect();
+      connect();
+    };
+
   } else {
     show("You have no web sockets");
   };
