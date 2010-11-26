@@ -55,6 +55,9 @@ function connect() {
       // Web Socket is connected. You can send data by send() method.
       ws.send("stream " + connectedUser);
       ws.send("setlimit tweet_archived_limit " + Options.get("tweet_archived_limit"));
+      if (Options.get("searchText")) {
+        ws.send("search " + Options.get("searchText"));
+      }
     };
 
     ws.onmessage = function (evt)
@@ -90,6 +93,14 @@ function connect() {
       } else if (eventObj.lookedup_tweet) {
         notificationQueue.push(eventObj);
         showHtml();
+      } else if (eventObj.search_result) {
+        if (eventObj.search_result.ids) {
+          for (var i in eventObj.search_result.ids) {
+            ws.send("tweet " + eventObj.search_result.ids[i] + " search");
+          }
+        } else {
+          ws.send("tweet " + eventObj.search_result.id + " search");
+        }
       }
     };
 
@@ -134,7 +145,8 @@ var connectedUser = Options.get("userid");
 
 chrome.browserAction.onClicked.addListener(toggleConnection);
 iconAlert([200, 10, 10, 228], "Off");
-connect();
+if (connectedUser)
+  connect();
 </script>
 </head>
 <body>

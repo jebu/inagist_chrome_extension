@@ -21,16 +21,22 @@
         <td>Auto Close : </td>
         <td><input type="checkbox" name="iautoclose" onChange="saveValues();"/></td>
       </tr>
+      <tr>
+        <td>Search Terms : </td>
+        <td><input type="search" name="isearch" onChange="saveValues();"/></td>
+      </tr>
     </table>
   </div>
 <script>
   var Options = chrome.extension.getBackgroundPage().Options;
   $("input[name='iconnecteduser']")[0].value = Options.get("userid");
   $("input[name='ialerttime']")[0].value = Options.get("alertTimeout");
+  $("input[name='isearch']")[0].value = Options.get("searchText");
   $("input[name='iautoclose']")[0].checked = Options.get("autoClose");
   function saveValues() {
     Options.set("userid", $("input[name='iconnecteduser']")[0].value);
     Options.set("alertTimeout", $("input[name='ialerttime']")[0].value);
+    Options.set("searchText", $("input[name='isearch']")[0].value);
     Options.set("autoClose", $("input[name='iautoclose']")[0].checked);
   }
 </script>
