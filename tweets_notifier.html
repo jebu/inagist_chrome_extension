@@ -20,6 +20,9 @@
     var tweetText = twitterlib.ify.clean(tweet.text);
     var createdAt = tweet.created_at;
     var tweetId = tweet.id;
+    var footerContext = "";
+    if (tweet.corelation)
+      footerContext = tweet.corelation;
 
     var tweet = jQuery("<div></div>").addClass("tweet");
     var image = jQuery("<img src='" + userImage +"' />");
@@ -28,8 +31,10 @@
     var text = jQuery("<span>" + tweetText +"</span>").addClass("text");
     var footer = jQuery("<span><a href='http://twitter.com/" + screenName + "/status/" + 
                         tweetId + "'>" + createdAt +"</a></span>").addClass("timestamp");
+    var contenxtSpan = jQuery("<span class='tweetcontext'>" + footerContext + "</span>");
     tweet.append(image).append(name).append("<br/>").append(text).
-          append("<div style='clear: both;'></div>").append(footer);
+          append("<div style='clear: both;'></div>").append(footer).
+          append(contenxtSpan);
     container.append(tweet);
   }
 

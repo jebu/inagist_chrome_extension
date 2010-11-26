@@ -30,9 +30,14 @@ html, body {
 
 .tweet .timestamp {
   clear: right;
-  font-size: 6pt;
+  font-size: 7pt;
 }
 
 .tweet .timestamp a {
   text-decoration: none;
+}
+
+.tweet .tweetcontext {
+  padding-left: 5px;
+  font-size: 7pt;
 }

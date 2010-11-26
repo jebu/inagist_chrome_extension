@@ -72,19 +72,16 @@ function connect() {
         iconAlert([10, 200, 10, 228], "On");
         setToolTip("inagist.com - " + connectedUser);
       } else if (eventObj.trending_personal_phrase) {
-        notificationQueue.push(eventObj);
-        showHtml();
-        ws.send("tweet " + eventObj.trending_personal_phrase.id);
+        var corelationText = " trend " + eventObj.trending_channel_phrase.phrase + 
+                             " for you";
+        ws.send("tweet " + eventObj.trending_personal_phrase.id + corelationText);
       } else if (eventObj.trending_channel_phrase) {
-        notificationQueue.push(eventObj);
-        showHtml();
-        ws.send("tweet " + eventObj.trending_channel_phrase.id);
+        var corelationText = " trend " + eventObj.trending_channel_phrase.phrase + 
+                             " in " + eventObj.trending_channel_phrase.channel;
+        ws.send("tweet " + eventObj.trending_channel_phrase.id + corelationText);
       } else if (eventObj.tweet_archived) {
         var tweet = eventObj.tweet_archived;
         ws.send("tweet " + tweet.id);
-        if (tweet.url) {
-          ws.send("url " + tweet.url);
-        }
       } else if (eventObj.lookedup_url) {
         if (eventObj.lookedup_url.title && eventObj.lookedup_url.description) {
           notificationQueue.push(eventObj);
@@ -96,10 +93,13 @@ function connect() {
       } else if (eventObj.search_result) {
         if (eventObj.search_result.ids) {
           for (var i in eventObj.search_result.ids) {
-            ws.send("tweet " + eventObj.search_result.ids[i] + " search");
+            ws.send("tweet " + eventObj.search_result.ids[i]);
           }
         } else {
-          ws.send("tweet " + eventObj.search_result.id + " search");
+          var corelationText = "";
+          if (eventObj.search_result.text)
+            corelationText = " match " + eventObj.search_result.text;
+          ws.send("tweet " + eventObj.search_result.id + corelationText );
         }
       }
     };
