@@ -11,7 +11,7 @@
     <table>
       <tr>
         <td>User Id : </td>
-        <td><input type="text" name="iconnecteduser" onChange="saveValues();"/></td>
+        <td><input type="text" name="iconnecteduser" onChange="saveValues(); reconnect();"/></td>
       </tr>
       <tr>
         <td>Alert Time : </td>
@@ -23,7 +23,7 @@
       </tr>
       <tr>
         <td>Search Terms : </td>
-        <td><input type="text" name="isearch" onChange="saveValues();"/></td>
+        <td><textarea name="isearch" cols="80" rows="5" onChange="saveValues(); reloadSearch();"></textarea></td>
       </tr>
     </table>
   </div>
@@ -31,13 +31,19 @@
   var Options = chrome.extension.getBackgroundPage().Options;
   $("input[name='iconnecteduser']")[0].value = Options.get("userid");
   $("input[name='ialerttime']")[0].value = Options.get("alertTimeout");
-  $("input[name='isearch']")[0].value = Options.get("searchText");
+  $("textarea[name='isearch']")[0].value = Options.get("searchText");
   $("input[name='iautoclose']")[0].checked = Options.get("autoClose");
   function saveValues() {
     Options.set("userid", $("input[name='iconnecteduser']")[0].value);
     Options.set("alertTimeout", $("input[name='ialerttime']")[0].value);
-    Options.set("searchText", $("input[name='isearch']")[0].value);
+    Options.set("searchText", $("textarea[name='isearch']")[0].value);
     Options.set("autoClose", $("input[name='iautoclose']")[0].checked);
+  }
+  function reloadSearch() {
+    chrome.extension.getBackgroundPage().sendSearchTerms();
+  }
+  function reconnect() {
+    chrome.extension.getBackgroundPage().reConnect();
   }
 </script>
 </body>

@@ -47,6 +47,13 @@ function setToolTip(Text) {
   chrome.browserAction.setTitle({title: Text});
 }
 
+function sendSearchTerms() {
+  Text = Options.get("searchText");
+  if ((ws.readyState == ws.OPEN) && Text && (Text.trim().length > 0)) {
+    ws.send("search " + Text.trim());
+  }
+}
+
 function connect() {
   if ("WebSocket" in window) {
     ws = new WebSocket(Options.get("websocketURL"));
@@ -55,16 +62,14 @@ function connect() {
       // Web Socket is connected. You can send data by send() method.
       ws.send("stream " + connectedUser);
       ws.send("setlimit tweet_archived_limit " + Options.get("tweet_archived_limit"));
-      if (Options.get("searchText")) {
-        ws.send("search " + Options.get("searchText"));
-      }
+      sendSearchTerms();
     };
 
     ws.onmessage = function (evt)
     {
       var data = evt.data;
       var eventObj = JSON.parse(data);
-      if (Options.get("debug"))
+      if (Options.get("debug") === 1)
         console.log(data);
       if (eventObj.error){
         show("Error " + eventObj.error);
@@ -112,8 +117,7 @@ function connect() {
 
     ws.onerror = function() {
       // reconnect on error
-      disconnect();
-      connect();
+      reConnect();
     };
 
   } else {
@@ -122,16 +126,23 @@ function connect() {
 }
 
 function disconnect() {
-  ws.close();
+  if (ws.readyState === ws.OPEN)
+    ws.close();
 }
 
 function toggleConnection() {
   if (ws.readyState === ws.CLOSED) {
     connectedUser = Options.get("userid");
-    connect();
+    if (connectedUser && connectedUser.trim().length > 0)
+      connect();
   } else {
     disconnect();
   }
+}
+
+function reConnect() {
+  disconnect();
+  toggleConnection();
 }
 
 Options.init();
