@@ -77,7 +77,7 @@ function connect() {
         iconAlert([10, 200, 10, 228], "On");
         setToolTip("inagist.com - " + connectedUser);
       } else if (eventObj.trending_personal_phrase) {
-        var corelationText = " trend " + eventObj.trending_channel_phrase.phrase + 
+        var corelationText = " trend " + eventObj.trending_personal_phrase.phrase + 
                              " for you";
         ws.send("tweet " + eventObj.trending_personal_phrase.id + corelationText);
       } else if (eventObj.trending_channel_phrase) {
