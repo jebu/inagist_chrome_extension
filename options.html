@@ -22,6 +22,14 @@
         <td><input type="checkbox" name="iautoclose" onChange="saveValues();"/></td>
       </tr>
       <tr>
+        <td>Auto Track Trends : </td>
+        <td><input type="checkbox" name="iautotracktrends" onChange="saveValues();"/></td>
+      </tr>
+      <tr>
+        <td>Auto Track Channel Trends : </td>
+        <td><input type="checkbox" name="iautotrackchanneltrends" onChange="saveValues();"/></td>
+      </tr>
+      <tr>
         <td>Search Terms : </td>
         <td><textarea name="isearch" cols="80" rows="5" onChange="saveValues(); reloadSearch();"></textarea></td>
       </tr>
@@ -33,11 +41,15 @@
   $("input[name='ialerttime']")[0].value = Options.get("alertTimeout");
   $("textarea[name='isearch']")[0].value = Options.get("searchText");
   $("input[name='iautoclose']")[0].checked = Options.get("autoClose");
+  $("input[name='iautotracktrends']")[0].checked = Options.get("autoTrackTrends");
+  $("input[name='iautotrackchanneltrends']")[0].checked = Options.get("autoTrackChannelTrends");
   function saveValues() {
     Options.set("userid", $("input[name='iconnecteduser']")[0].value);
     Options.set("alertTimeout", $("input[name='ialerttime']")[0].value);
     Options.set("searchText", $("textarea[name='isearch']")[0].value);
     Options.set("autoClose", $("input[name='iautoclose']")[0].checked);
+    Options.set("autoTrackTrends", $("input[name='iautotracktrends']")[0].checked);
+    Options.set("autoTrackChannelTrends", $("input[name='iautotrackchanneltrends']")[0].checked);
   }
   function reloadSearch() {
     chrome.extension.getBackgroundPage().sendSearchTerms();

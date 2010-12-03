@@ -4,6 +4,11 @@
 <script type="text/javascript" src="lib/options.js"></script>
 <script type="text/javascript" src="lib/utils.js"></script>
 <script>
+function log(Message){
+  if (Options.get("debug") === 1)
+    console.log(Message);
+}
+
 function show(message, image, title) {
   title = title ? title : "inagist.com";
   image = image ? image : 'img/inagist48.png';
@@ -47,11 +52,30 @@ function setToolTip(Text) {
   chrome.browserAction.setTitle({title: Text});
 }
 
-function sendSearchTerms() {
-  Text = Options.get("searchText");
+function sendSearch(Text) {
   if ((ws.readyState == ws.OPEN) && Text && (Text.trim().length > 0)) {
+    log("Sending search terms " + Text.trim());
     ws.send("search " + Text.trim());
   }
+}
+
+function sendSearchTerms() {
+  var searchTerms = Options.get("searchText").split(",");
+  if (Options.get("autoTrackTrends") === true || Options.get("autoTrackTrends") == "true") {
+    for (i in autoTracked) {
+      if ($.inArray(autoTracked[i], searchTerms) < 0)
+        searchTerms.push(autoTracked[i]);
+    }
+  }
+  if (Options.get("autoTrackChannelTrends") === true || Options.get("autoTrackChannelTrends") == "true") {
+    for (j in autoTrackedChannel) {
+      if ($.inArray(autoTrackedChannel[i], searchTerms) < 0)
+        searchTerms.push(autoTrackedChannel[i]);
+    }
+  }
+
+  var text = searchTerms.slice(0, 20).join(",");
+  sendSearch(text);
 }
 
 function connect() {
@@ -61,28 +85,48 @@ function connect() {
     ws.onopen = function() {
       // Web Socket is connected. You can send data by send() method.
       ws.send("stream " + connectedUser);
+      if (Options.get("autoTrackTrends"))
+        ws.send("trackwords " + connectedUser);
+      else
+        sendSearchTerms();
       ws.send("setlimit tweet_archived_limit " + Options.get("tweet_archived_limit"));
-      sendSearchTerms();
     };
 
     ws.onmessage = function (evt)
     {
       var data = evt.data;
       var eventObj = JSON.parse(data);
-      if (Options.get("debug") === 1)
-        console.log(data);
+      log(data);
       if (eventObj.error){
         show("Error " + eventObj.error);
       } else if (eventObj.status == "connected") {
         iconAlert([10, 200, 10, 228], "On");
         setToolTip("inagist.com - " + connectedUser);
+      } else if (eventObj.trackwords) {
+        var trackwords = eventObj.trackwords;
+        for (i in trackwords) {
+          if ($.inArray(trackwords[i], autoTracked) < 0) {
+            autoTracked.push(trackwords[i]); 
+          }
+        }
+        sendSearchTerms();
       } else if (eventObj.trending_personal_phrase) {
         var corelationText = " trend " + eventObj.trending_personal_phrase.phrase + 
                              " for you";
+        if ($.inArray(eventObj.trending_personal_phrase.phrase, autoTracked) < 0) {
+          autoTracked.push(eventObj.trending_personal_phrase.phrase); 
+          if (Options.get("autoTrackTrends") === true || Options.get("autoTrackTrends") == "true")
+            sendSearchTerms();
+        }
         ws.send("tweet " + eventObj.trending_personal_phrase.id + corelationText);
       } else if (eventObj.trending_channel_phrase) {
         var corelationText = " trend " + eventObj.trending_channel_phrase.phrase + 
                              " in " + eventObj.trending_channel_phrase.channel;
+        if ($.inArray(eventObj.trending_channel_phrase.phrase, autoTrackedChannel) < 0) {
+          autoTrackedChannel.push(eventObj.trending_channel_phrase.phrase); 
+          if (Options.get("autoTrackChannelTrends") === true || Options.get("autoTrackChannelTrends") == "true")
+            sendSearchTerms();
+        }
         ws.send("tweet " + eventObj.trending_channel_phrase.id + corelationText);
       } else if (eventObj.tweet_archived) {
         var tweet = eventObj.tweet_archived;
@@ -153,6 +197,8 @@ chrome.idle.onStateChanged.addListener(function(newState){
 var notificationQueue = [];
 var ws = null;
 var connectedUser = Options.get("userid");
+var autoTracked = [];
+var autoTrackedChannel = [];
 
 chrome.browserAction.onClicked.addListener(toggleConnection);
 iconAlert([200, 10, 10, 228], "Off");

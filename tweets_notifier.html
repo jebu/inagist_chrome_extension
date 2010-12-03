@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <script type="text/javascript" src="lib/3rdparty/jquery.js"></script>
   <script type="text/javascript" src="lib/3rdparty/jquery.tipsy.js"></script>
   <script type="text/javascript" src="lib/3rdparty/twitterlib.min.js"></script>
@@ -23,6 +24,10 @@
     var footerContext = "";
     if (tweet.corelation)
       footerContext = tweet.corelation;
+    if (tweet.retweets)
+      footerContext += " ♻" + tweet.retweets;
+    if (tweet.mentions)
+      footerContext += ", " + tweet.mentions;
 
     var tweet = jQuery("<div></div>").addClass("tweet");
     var image = jQuery("<img src='" + userImage +"' />");
