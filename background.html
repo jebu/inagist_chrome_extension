@@ -118,7 +118,7 @@ function connect() {
           if (Options.get("autoTrackTrends") === true || Options.get("autoTrackTrends") == "true")
             sendSearchTerms();
         }
-        ws.send("tweet " + eventObj.trending_personal_phrase.id + corelationText);
+        ws.send("tweet " + eventObj.trending_personal_phrase.id_str + corelationText);
       } else if (eventObj.trending_channel_phrase) {
         var corelationText = " trend " + eventObj.trending_channel_phrase.phrase + 
                              " in " + eventObj.trending_channel_phrase.channel;
@@ -127,10 +127,10 @@ function connect() {
           if (Options.get("autoTrackChannelTrends") === true || Options.get("autoTrackChannelTrends") == "true")
             sendSearchTerms();
         }
-        ws.send("tweet " + eventObj.trending_channel_phrase.id + corelationText);
+        ws.send("tweet " + eventObj.trending_channel_phrase.id_str + corelationText);
       } else if (eventObj.tweet_archived) {
         var tweet = eventObj.tweet_archived;
-        ws.send("tweet " + tweet.id);
+        ws.send("tweet " + tweet.id_str);
       } else if (eventObj.lookedup_url) {
         if (eventObj.lookedup_url.title && eventObj.lookedup_url.description) {
           notificationQueue.push(eventObj);
@@ -148,7 +148,7 @@ function connect() {
           var corelationText = "";
           if (eventObj.search_result.text)
             corelationText = " match " + eventObj.search_result.text;
-          ws.send("tweet " + eventObj.search_result.id + corelationText );
+          ws.send("tweet " + eventObj.search_result.id_str + corelationText );
         }
       }
     };
