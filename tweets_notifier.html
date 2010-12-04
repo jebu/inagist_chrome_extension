@@ -27,7 +27,7 @@
     if (tweet.retweets)
       footerContext += " ♻" + tweet.retweets;
     if (tweet.mentions)
-      footerContext += ", " + tweet.mentions;
+      footerContext += ", ↶" + tweet.mentions;
 
     var tweet = jQuery("<div></div>").addClass("tweet");
     var image = jQuery("<img src='" + userImage +"' />");
