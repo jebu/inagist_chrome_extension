@@ -5,6 +5,7 @@
   <script type="text/javascript" src="lib/3rdparty/jquery.js"></script>
   <script type="text/javascript" src="lib/3rdparty/jquery.tipsy.js"></script>
   <script type="text/javascript" src="lib/3rdparty/twitterlib.min.js"></script>
+  <script type="text/javascript" src="lib/3rdparty/pretty.js"></script>
   <script type="text/javascript" src="lib/utils.js"></script>
 
   <link  rel="stylesheet" type="text/css" href="css/desktopTweets.css" />
@@ -35,7 +36,7 @@
                       "'>" + screenName +"</a></span>").addClass("name");
     var text = jQuery("<span>" + tweetText +"</span>").addClass("text");
     var footer = jQuery("<span><a href='http://twitter.com/" + screenName + "/status/" + 
-                        tweetId + "'>" + createdAt +"</a></span>").addClass("timestamp");
+                        tweetId + "'>" + prettyDate(createdAt) +"</a></span>").addClass("timestamp");
     var contenxtSpan = jQuery("<span class='tweetcontext'>" + footerContext + "</span>");
     tweet.append(image).append(name).append("<br/>").append(text).
           append("<div style='clear: both;'></div>").append(footer).
