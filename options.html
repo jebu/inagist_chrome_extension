@@ -40,9 +40,9 @@
   $("input[name='iconnecteduser']")[0].value = Options.get("userid");
   $("input[name='ialerttime']")[0].value = Options.get("alertTimeout");
   $("textarea[name='isearch']")[0].value = Options.get("searchText");
-  $("input[name='iautoclose']")[0].checked = Options.get("autoClose");
-  $("input[name='iautotracktrends']")[0].checked = Options.get("autoTrackTrends");
-  $("input[name='iautotrackchanneltrends']")[0].checked = Options.get("autoTrackChannelTrends");
+  $("input[name='iautoclose']")[0].checked = Options.getBoolean("autoClose");
+  $("input[name='iautotracktrends']")[0].checked = Options.getBoolean("autoTrackTrends");
+  $("input[name='iautotrackchanneltrends']")[0].checked = Options.getBoolean("autoTrackChannelTrends");
   function saveValues() {
     Options.set("userid", $("input[name='iconnecteduser']")[0].value);
     Options.set("alertTimeout", $("input[name='ialerttime']")[0].value);
