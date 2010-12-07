@@ -33,6 +33,10 @@
         <td>Search Terms : </td>
         <td><textarea name="isearch" cols="80" rows="5" onChange="saveValues(); reloadSearch();"></textarea></td>
       </tr>
+      <tr>
+        <td>Ignored Trends : </td>
+        <td><textarea name="iignored" cols="80" rows="5" onChange="saveValues(); reloadSearch();"></textarea></td>
+      </tr>
     </table>
   </div>
 <script>
@@ -40,6 +44,7 @@
   $("input[name='iconnecteduser']")[0].value = Options.get("userid");
   $("input[name='ialerttime']")[0].value = Options.get("alertTimeout");
   $("textarea[name='isearch']")[0].value = Options.get("searchText");
+  $("textarea[name='iignored']")[0].value = Options.get("ignoredTrends");
   $("input[name='iautoclose']")[0].checked = Options.getBoolean("autoClose");
   $("input[name='iautotracktrends']")[0].checked = Options.getBoolean("autoTrackTrends");
   $("input[name='iautotrackchanneltrends']")[0].checked = Options.getBoolean("autoTrackChannelTrends");
@@ -47,6 +52,7 @@
     Options.set("userid", $("input[name='iconnecteduser']")[0].value);
     Options.set("alertTimeout", $("input[name='ialerttime']")[0].value);
     Options.set("searchText", $("textarea[name='isearch']")[0].value);
+    Options.set("ignoredTrends", $("textarea[name='iignored']")[0].value);
     Options.set("autoClose", $("input[name='iautoclose']")[0].checked);
     Options.set("autoTrackTrends", $("input[name='iautotracktrends']")[0].checked);
     Options.set("autoTrackChannelTrends", $("input[name='iautotrackchanneltrends']")[0].checked);

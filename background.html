@@ -59,17 +59,27 @@ function sendSearch(Text) {
   }
 }
 
+function trimElement(element) {
+  return element.trim();
+}
+
 function sendSearchTerms() {
-  var searchTerms = Options.get("searchText").split(",");
+  var searchTerms = Options.get("searchText").split(",").map(trimElement);
+  var ignoredTerms = [];
+  
+  if (Options.get("ignoredTerms"))
+    ignoredTerms = Options.get("ignoredTerms").split(",").map(trimElement);
+
   if (Options.get("autoTrackTrends") === true || Options.get("autoTrackTrends") == "true") {
     for (i in autoTracked) {
-      if ($.inArray(autoTracked[i], searchTerms) < 0)
+      if (($.inArray(autoTracked[i], searchTerms) < 0) && ($.inArray(autoTracked[i], ignoredTerms) < 0))
         searchTerms.push(autoTracked[i]);
     }
   }
+  
   if (Options.get("autoTrackChannelTrends") === true || Options.get("autoTrackChannelTrends") == "true") {
-    for (j in autoTrackedChannel) {
-      if ($.inArray(autoTrackedChannel[i], searchTerms) < 0)
+    for (i in autoTrackedChannel) {
+      if (($.inArray(autoTrackedChannel[i], searchTerms) < 0) && ($.inArray(autoTrackedChannel[i], ignoredTerms) < 0))
         searchTerms.push(autoTrackedChannel[i]);
     }
   }
@@ -103,7 +113,7 @@ function connect() {
         iconAlert([10, 200, 10, 228], "On");
         setToolTip("inagist.com - " + connectedUser);
       } else if (eventObj.trackwords) {
-        var trackwords = eventObj.trackwords;
+        var trackwords = eventObj.trackwords.map(trimElement);
         for (i in trackwords) {
           if ($.inArray(trackwords[i], autoTracked) < 0) {
             autoTracked.push(trackwords[i]); 
