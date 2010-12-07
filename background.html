@@ -65,21 +65,21 @@ function trimElement(element) {
 
 function sendSearchTerms() {
   var searchTerms = Options.get("searchText").split(",").map(trimElement);
-  var ignoredTerms = [];
+  var ignoredTrends = [];
   
-  if (Options.get("ignoredTerms"))
-    ignoredTerms = Options.get("ignoredTerms").split(",").map(trimElement);
+  if (Options.get("ignoredTrends"))
+    ignoredTrends = Options.get("ignoredTrends").split(",").map(trimElement);
 
   if (Options.get("autoTrackTrends") === true || Options.get("autoTrackTrends") == "true") {
     for (i in autoTracked) {
-      if (($.inArray(autoTracked[i], searchTerms) < 0) && ($.inArray(autoTracked[i], ignoredTerms) < 0))
+      if (($.inArray(autoTracked[i], searchTerms) < 0) && ($.inArray(autoTracked[i], ignoredTrends) < 0))
         searchTerms.push(autoTracked[i]);
     }
   }
   
   if (Options.get("autoTrackChannelTrends") === true || Options.get("autoTrackChannelTrends") == "true") {
     for (i in autoTrackedChannel) {
-      if (($.inArray(autoTrackedChannel[i], searchTerms) < 0) && ($.inArray(autoTrackedChannel[i], ignoredTerms) < 0))
+      if (($.inArray(autoTrackedChannel[i], searchTerms) < 0) && ($.inArray(autoTrackedChannel[i], ignoredTrends) < 0))
         searchTerms.push(autoTrackedChannel[i]);
     }
   }
