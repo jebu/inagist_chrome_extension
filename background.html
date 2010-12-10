@@ -113,10 +113,12 @@ function connect() {
         iconAlert([10, 200, 10, 228], "On");
         setToolTip("inagist.com - " + connectedUser);
       } else if (eventObj.trackwords) {
-        var trackwords = eventObj.trackwords.map(trimElement);
-        for (i in trackwords) {
-          if ($.inArray(trackwords[i], autoTracked) < 0) {
-            autoTracked.push(trackwords[i]); 
+        if (eventObj.trackwords.length > 0) {
+          var trackwords = eventObj.trackwords.map(trimElement);
+          for (i in trackwords) {
+            if ($.inArray(trackwords[i], autoTracked) < 0) {
+              autoTracked.push(trackwords[i]); 
+            }
           }
         }
         sendSearchTerms();
