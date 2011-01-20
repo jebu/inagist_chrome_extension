@@ -3,6 +3,7 @@
 <script type="text/javascript" src="lib/3rdparty/jquery.js"></script>
 <script type="text/javascript" src="lib/options.js"></script>
 <script type="text/javascript" src="lib/utils.js"></script>
+<script type="text/javascript" src="lib/instaket.js"></script>
 <script>
 function log(Message){
   if (Options.getBoolean("debug"))
@@ -53,9 +54,9 @@ function setToolTip(Text) {
 }
 
 function sendSearch(Text) {
-  if ((ws.readyState == ws.OPEN) && Text && (Text.trim().length > 0)) {
+  if ((iSocket.ws.readyState == iSocket.ws.OPEN) && Text && (Text.trim().length > 0)) {
     log("Sending search terms " + Text.trim());
-    ws.send("search " + Text.trim());
+    iSocket.search(Text.trim());
   }
 }
 
@@ -90,104 +91,109 @@ function sendSearchTerms() {
 
 function connect() {
   if ("WebSocket" in window) {
-    ws = new WebSocket(Options.get("websocketURL"));
-    
-    ws.onopen = function() {
-      // Web Socket is connected. You can send data by send() method.
-      ws.send("stream " + connectedUser);
-      if (Options.get("autoTrackTrends"))
-        ws.send("trackwords " + connectedUser);
-      else
-        sendSearchTerms();
-      ws.send("setlimit tweet_archived_limit " + Options.get("tweet_archived_limit"));
-    };
+    var options = {url: Options.get("websocketURL"), archive_limit: Options.get("tweet_archived_limit")};
+    if (Options.get("autoTrackTrends"))
+      options.trackwords = true;
 
-    ws.onmessage = function (evt)
-    {
-      var data = evt.data;
-      var eventObj = JSON.parse(data);
-      log(data);
-      if (eventObj.error){
-        show("Error " + eventObj.error);
-      } else if (eventObj.status == "connected") {
-        iconAlert([10, 200, 10, 228], "On");
-        setToolTip("inagist.com - " + connectedUser);
-      } else if (eventObj.trackwords) {
-        if (eventObj.trackwords.length > 0) {
-          var trackwords = eventObj.trackwords.map(trimElement);
-          for (i in trackwords) {
-            if ($.inArray(trackwords[i], autoTracked) < 0) {
-              autoTracked.push(trackwords[i]); 
-            }
+    iSocket = new Instaket(connectedUser, options);
+    
+    $(iSocket).bind('user_connected',function() {
+      iconAlert([10, 200, 10, 228], "On");
+      setToolTip("inagist.com - " + connectedUser);
+      sendSearchTerms();
+    });
+
+    $(iSocket).bind('trackwords', function(event, trackwords){
+      if (trackwords.length > 0) {
+        trackwords = trackwords.map(trimElement);
+        for (i in trackwords) {
+          if ($.inArray(trackwords[i], autoTracked) < 0) {
+            autoTracked.push(trackwords[i]); 
           }
-        }
-        sendSearchTerms();
-      } else if (eventObj.trending_personal_phrase) {
-        var corelationText = " trend " + eventObj.trending_personal_phrase.phrase + 
-                             " for you";
-        if ($.inArray(eventObj.trending_personal_phrase.phrase, autoTracked) < 0) {
-          autoTracked.push(eventObj.trending_personal_phrase.phrase); 
-          if (Options.get("autoTrackTrends") === true || Options.get("autoTrackTrends") == "true")
-            sendSearchTerms();
-        }
-        ws.send("tweet " + eventObj.trending_personal_phrase.id_str + corelationText);
-      } else if (eventObj.trending_channel_phrase) {
-        var corelationText = " trend " + eventObj.trending_channel_phrase.phrase + 
-                             " in " + eventObj.trending_channel_phrase.channel;
-        if ($.inArray(eventObj.trending_channel_phrase.phrase, autoTrackedChannel) < 0) {
-          autoTrackedChannel.push(eventObj.trending_channel_phrase.phrase); 
-          if (Options.get("autoTrackChannelTrends") === true || Options.get("autoTrackChannelTrends") == "true")
-            sendSearchTerms();
-        }
-        ws.send("tweet " + eventObj.trending_channel_phrase.id_str + corelationText);
-      } else if (eventObj.tweet_archived) {
-        var tweet = eventObj.tweet_archived;
-        ws.send("tweet " + tweet.id_str);
-      } else if (eventObj.lookedup_url) {
-        if (eventObj.lookedup_url.title && eventObj.lookedup_url.description) {
-          notificationQueue.push(eventObj);
-          showHtml();
-        }
-      } else if (eventObj.lookedup_tweet) {
-        notificationQueue.push(eventObj);
-        showHtml();
-      } else if (eventObj.search_result) {
-        if (eventObj.search_result.ids) {
-          for (var i in eventObj.search_result.ids) {
-            ws.send("tweet " + eventObj.search_result.ids[i]);
-          }
-        } else {
-          var corelationText = "";
-          if (eventObj.search_result.text)
-            corelationText = " match " + eventObj.search_result.text;
-          ws.send("tweet " + eventObj.search_result.id_str + corelationText );
         }
       }
-    };
+      sendSearchTerms();
+    });
 
-    ws.onclose = function()
-    {
+    $(iSocket).bind('trending_personal_phrase', function(event, trending_personal_phrase) {
+      var tipText = " trend " + trending_personal_phrase.phrase + " for you";
+      if ($.inArray(trending_personal_phrase.phrase, autoTracked) < 0) {
+        autoTracked.push(trending_personal_phrase.phrase); 
+        if (Options.get("autoTrackTrends") === true || Options.get("autoTrackTrends") == "true")
+          sendSearchTerms();
+      }
+      iSocket.lookuptweet(trending_personal_phrase.id_str, function(data){
+        data.corelation = tipText;
+        notificationQueue.push(data);
+        showHtml();
+      });
+    });
+
+    $(iSocket).bind('trending_channel_phrase', function(event, trending_channel_phrase) {
+      var tipText = " trend " + trending_channel_phrase.phrase + 
+                           " in " + trending_channel_phrase.channel;
+      if ($.inArray(trending_channel_phrase.phrase, autoTrackedChannel) < 0) {
+        autoTrackedChannel.push(trending_channel_phrase.phrase); 
+        if (Options.get("autoTrackChannelTrends") === true || Options.get("autoTrackChannelTrends") == "true")
+          sendSearchTerms();
+      }
+      iSocket.lookuptweet(trending_channel_phrase.id_str, function(data){
+        data.corelation = tipText;
+        notificationQueue.push(data);
+        showHtml();
+      });
+    });
+
+    $(iSocket).bind('tweet_archived', function(event, tweet) {
+      iSocket.lookuptweet(tweet.id_str, function(data){
+        data.corelation = undefined;
+        notificationQueue.push(data);
+        showHtml();
+      });
+    });
+
+    $(iSocket).bind('search_result', function(event, search_result) {
+      if (search_result.ids) {
+        for (var i in search_result.ids) {
+          iSocket.lookuptweet(search_result.ids[i], function(data){
+            data.corelation = undefined;
+            notificationQueue.push(data);
+            showHtml();
+          });
+        }
+      } else {
+        var corelationText = "";
+        if (search_result.text)
+          corelationText = " match " + search_result.text;
+        iSocket.lookuptweet(search_result.id_str, function(data){
+          data.corelation = corelationText;
+          notificationQueue.push(data);
+          showHtml();
+        });
+      }
+    });
+
+    $(iSocket).bind('connection_closed', function(){
       iconAlert([200, 10, 10, 228], "Off");
       setToolTip("inagist.com");
-    };
+    });
 
-    ws.onerror = function() {
-      // reconnect on error
+    $(iSocket).bind('connection_errored', function() {
       reConnect();
-    };
-
+    });
+    
+    iSocket.connect();
   } else {
     show("You have no web sockets");
   };
 }
 
 function disconnect() {
-  if (ws.readyState === ws.OPEN)
-    ws.close();
+  iSocket.disconnect();
 }
 
 function toggleConnection() {
-  if (ws.readyState === ws.CLOSED) {
+  if ((typeof iSocket == 'undefined' || typeof iSocket.ws == 'undefined') || (iSocket.ws.readyState === iSocket.ws.CLOSED)) {
     connectedUser = Options.get("userid");
     if (connectedUser && connectedUser.trim().length > 0)
       connect();
@@ -207,7 +213,7 @@ chrome.idle.onStateChanged.addListener(function(newState){
 });
 
 var notificationQueue = [];
-var ws = null;
+var iSocket = null;
 var connectedUser = Options.get("userid");
 var autoTracked = [];
 var autoTrackedChannel = [];

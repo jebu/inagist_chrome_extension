@@ -44,44 +44,10 @@
     container.append(tweet);
   }
 
-  function renderUrl(url, container) {
-    var link = url.url;
-    var title = url.title?url.title:link;
-    var description = twitterlib.ify.clean(url.description?url.description:link);
-    var uimage = url.attributes.image_src?url.attributes.image_src:"/img/inagist19.png";
-    var tweet = jQuery("<div></div>").addClass("tweet");
-    var image = jQuery("<img src='" + uimage +"' />");
-    var name = jQuery("<span><a href='" + link + "'>" + title +"</a></span>").addClass("name");
-    var text = jQuery("<span>" + description +"</span>").addClass("text");
-    tweet.append(image).append(name).append("<br/>").append(text).append("<div style='clear: both;'></div>");
-    container.append(tweet);
-  }
-
-  function renderTrendAlert(notification, container) {
-    var channel = notification.channel;
-    var cText = notification.phrase;
-    var tweet = jQuery("<div></div>").addClass("tweet");
-    var image = jQuery("<img src='icon.gif' />");
-    var name = jQuery("<span> Trending in " + channel +"</span>").addClass("name");
-    var text = jQuery("<span><a href='http://inagist.com/" + channel + "/trends?t=" + cText +
-                      "'>" + cText +"</a></span>").addClass("text");
-    tweet.append(image).append(name).append("<br/>").append(text).append("<div style='clear: both;'></div>");
-    container.append(tweet);
-  }
-
   $(function() {
     var notification = notificationQueue.pop();
-    if (notification) {
-      if (notification.trending_personal_phrase) {
-        notification.trending_personal_phrase.channel=Options.get("userid");
-        renderTrendAlert(notification.trending_personal_phrase, $(document.body));
-      } else if (notification.trending_channel_phrase) {
-        renderTrendAlert(notification.trending_channel_phrase, $(document.body));
-      } else if (notification.lookedup_url) {
-        renderUrl(notification.lookedup_url, $(document.body));
-      } else if (notification.lookedup_tweet) {
-        renderTweet(notification.lookedup_tweet, $(document.body));
-      }
+    if (notification.id) {
+      renderTweet(notification, $(document.body));
     }
   });
   </script>
