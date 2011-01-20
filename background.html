@@ -91,9 +91,11 @@ function sendSearchTerms() {
 
 function connect() {
   if ("WebSocket" in window) {
-    var options = {url: Options.get("websocketURL"), archive_limit: Options.get("tweet_archived_limit")};
+    var options = {url: Options.get("websocketURL"), archive_limit: Options.get("tweet_archived_limit"), debug: true};
     if (Options.get("autoTrackTrends"))
       options.trackwords = true;
+    if (Options.getBoolean("debug"))
+      options.debug = true;
 
     iSocket = new Instaket(connectedUser, options);
     
