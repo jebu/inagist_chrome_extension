@@ -30,6 +30,10 @@
         <td><input type="checkbox" name="iautotrackchanneltrends" onChange="saveValues();"/></td>
       </tr>
       <tr>
+        <td>Use Secure Connection : </td>
+        <td><input type="checkbox" name="iencrypt" onChange="saveValues(); reconnect();"/></td>
+      </tr>
+      <tr>
         <td>Search Terms : </td>
         <td><textarea name="isearch" cols="80" rows="5" onChange="saveValues(); reloadSearch();"></textarea></td>
       </tr>
@@ -48,6 +52,7 @@
   $("input[name='iautoclose']")[0].checked = Options.getBoolean("autoClose");
   $("input[name='iautotracktrends']")[0].checked = Options.getBoolean("autoTrackTrends");
   $("input[name='iautotrackchanneltrends']")[0].checked = Options.getBoolean("autoTrackChannelTrends");
+  $("input[name='iencrypt']")[0].checked = Options.getBoolean("encrypt");
   function saveValues() {
     Options.set("userid", $("input[name='iconnecteduser']")[0].value);
     Options.set("alertTimeout", $("input[name='ialerttime']")[0].value);
@@ -56,6 +61,7 @@
     Options.set("autoClose", $("input[name='iautoclose']")[0].checked);
     Options.set("autoTrackTrends", $("input[name='iautotracktrends']")[0].checked);
     Options.set("autoTrackChannelTrends", $("input[name='iautotrackchanneltrends']")[0].checked);
+    Options.set("encrypt", $("input[name='iencrypt']")[0].checked);
   }
   function reloadSearch() {
     chrome.extension.getBackgroundPage().sendSearchTerms();
