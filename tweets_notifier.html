@@ -21,7 +21,7 @@
     var userImage = tweet.user.profile_image_url;
     var tweetText = twitterlib.ify.clean(tweet.text);
     var createdAt = tweet.created_at;
-    var tweetId = tweet.id;
+    var tweetId = tweet.id_str;
     var footerContext = "";
     if (tweet.corelation)
       footerContext = tweet.corelation;
