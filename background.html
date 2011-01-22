@@ -95,7 +95,7 @@ function connect() {
     if (Options.getBoolean("encrypt"))
       url = Options.get("websocketSecureURL");
 
-    var options = {url: url, archive_limit: Options.get("tweet_archived_limit"), debug: true};
+    var options = {url: url, archive_limit: Options.get("tweet_archived_limit"), debug: false};
     if (Options.get("autoTrackTrends"))
       options.trackwords = true;
     if (Options.getBoolean("debug"))

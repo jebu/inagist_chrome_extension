@@ -16,6 +16,24 @@
   var notificationQueue = chrome.extension.getBackgroundPage().notificationQueue;
   var Options = chrome.extension.getBackgroundPage().Options;
   
+  function openTweetTab(url){
+    chrome.tabs.create({url: url});
+  }
+
+  function retweet(tweetid){
+    $.ajax({
+      url:"http://inagist.com/retweet.php?tweet_id=" + tweetid,
+      success: function(){ alert("Retweeted " + tweetid);},
+      error: function() { alert("Please make sure you are logged into inagist.com");}
+    });
+  }
+
+  function reply(tweetid, screenName){
+  }
+
+  function favorite(tweetid){
+  }
+
   function renderTweet(tweet, container) {
     var screenName = tweet.user.screen_name;
     var userImage = tweet.user.profile_image_url;
@@ -32,13 +50,23 @@
 
     var tweet = jQuery("<div></div>").addClass("tweet");
     var image = jQuery("<img src='" + userImage +"' />");
+    
+    var tweetActions = jQuery("<div></div>").addClass("actionbar");
+    var retweetAction = jQuery("<span class='action'></span>").addClass("retweet").click(function(){retweet(tweetId);});
+    var replyAction = jQuery("<span class='action'></span>").addClass("reply").click(function(){reply(tweetId, screenName);});
+    var favoriteAction = jQuery("<span class='action'></span>").addClass("favorite").click(function(){favorite(tweetId);});
+    tweetActions.append(retweetAction).append(replyAction).append(favoriteAction);
+    
     var name = jQuery("<span><a href='http://twitter.com/" + screenName + 
                       "'>" + screenName +"</a></span>").addClass("name");
     var text = jQuery("<span>" + tweetText +"</span>").addClass("text");
-    var footer = jQuery("<span><a href='http://twitter.com/" + screenName + "/status/" + 
-                        tweetId + "'>" + prettyDate(createdAt) +"</a></span>").addClass("timestamp");
+    var footer = jQuery("<span>" + prettyDate(createdAt) +"</span>").addClass("timestamp").
+                        click(function(){
+                          openTweetTab("http://twitter.com/" + screenName + "/status/" + tweetId);
+                        });
     var contenxtSpan = jQuery("<span class='tweetcontext'>" + footerContext + "</span>");
-    tweet.append(image).append(name).append("<br/>").append(text).
+    
+    tweet.append(image).append(tweetActions).append(name).append("<br/>").append(text).
           append("<div style='clear: both;'></div>").append(footer).
           append(contenxtSpan);
     container.append(tweet);
