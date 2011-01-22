@@ -106,7 +106,7 @@ function connect() {
     $(iSocket).bind('user_connected',function() {
       iconAlert([10, 200, 10, 228], "On");
       setToolTip("inagist.com - " + connectedUser);
-      sendSearchTerms();
+      searchTimer = setTimeout(function() {sendSearchTerms();}, 5000);
     });
 
     $(iSocket).bind('trackwords', function(event, trackwords){
@@ -118,6 +118,7 @@ function connect() {
           }
         }
       }
+      clearTimeout(searchTimer);
       sendSearchTerms();
     });
 
@@ -223,12 +224,14 @@ var iSocket = null;
 var connectedUser = Options.get("userid");
 var autoTracked = [];
 var autoTrackedChannel = [];
+var searchTimer = undefined;
 
 chrome.browserAction.onClicked.addListener(toggleConnection);
 iconAlert([200, 10, 10, 228], "Off");
 if (connectedUser)
   connect();
 </script>
+
 </head>
 <body>
    <script>

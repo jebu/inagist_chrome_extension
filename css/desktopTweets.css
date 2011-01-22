@@ -71,3 +71,24 @@ html, body {
 .actionbar .favorite {
   background-position: -16px 0px;
 }
+
+#dialog {
+  position: fixed;
+  left: 90px;
+  background-color: #aaa;
+  width: 100px;
+  top: 5px;
+  padding: 10px;
+  font-family: georgia;
+  font-size: 15px;
+  opacity: 0.90;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#dialog button {
+  font-size: 10px;
+}
+#dialog textarea {
+  font-size: 10px;
+}
