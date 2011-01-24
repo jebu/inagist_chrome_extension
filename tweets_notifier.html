@@ -23,6 +23,7 @@
     $(document.body).append("<div id='dialog'> Retweet this? <button id='okbutton'> OK </button> <button id='cancelbutton'> Cancel </button> </div>");
     $("#okbutton").click(function(){
       $.ajax({
+        type: 'POST',
         url:"http://inagist.com/retweet.php?tweet_id=" + tweetid,
         success: function(){ 
           $("#dialog").html("Retweeted"); 
@@ -47,6 +48,7 @@
       "</textarea><button id='okbutton'> OK </button> <button id='cancelbutton'> Cancel </button> </div>");
     $("#okbutton").click(function(){
       $.ajax({
+        type: 'POST',
         url:"http://inagist.com/reply.php?tweet_id=" + tweetid + "&tweet_text="+ $("#replyText").text(),
         success: function(){ 
           $("#dialog").html("Reply sent"); 
@@ -69,6 +71,7 @@
     $(document.body).append("<div id='dialog'> Favorite this? <button id='okbutton'> OK </button> <button id='cancelbutton'> Cancel </button> </div>");
     $("#okbutton").click(function(){
       $.ajax({
+        type: 'POST',
         url:"http://inagist.com/favorite.php?tweet_id=" + tweetid,
         success: function(){ 
           $("#dialog").html("Favorited"); 
