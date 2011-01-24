@@ -18,9 +18,31 @@
   function openTweetTab(url){
     chrome.tabs.create({url: url});
   }
+  
+  function getUserDetails(success, failure){
+    $.ajax({
+      type: 'GET',
+      url: 'http://inagist.com/getuser.php',
+      success: function(data){
+        success(data);
+      },
+      error: function(){
+        failure();
+      }
+    });
+  }
 
-  function retweet(tweetid){
-    $(document.body).append("<div id='dialog'> Retweet this? <button id='okbutton'> OK </button> <button id='cancelbutton'> Cancel </button> </div>");
+  function showLogin(){
+    if ($("#dialog").length < 1)
+      $(document.body).append("<div id='dialog'></div>");
+    $("#dialog").html("Please log-in at inagist.com"); 
+    setTimeout(function(){$("#dialog").remove();}, 3000);
+  }
+
+  function retweet(tweetid, user){
+    $(document.body).append("<div id='dialog'> <img src='"+user.profile_image_url+"' title='"+user.user_id+"'/>"+
+                            " Retweet this? <button id='okbutton'>"+
+                            " OK </button> <button id='cancelbutton'> Cancel </button> </div>");
     $("#okbutton").click(function(){
       $.ajax({
         type: 'POST',
@@ -31,10 +53,7 @@
             $("#dialog").remove();
           }, 3000)
         },
-        error: function() { 
-          $("#dialog").html("Please make sure you are logged into inagist.com"); 
-          setTimeout(function(){$("#dialog").remove();}, 3000)
-        }
+        error: function() {showLogin();}
       });
     });
     $("#cancelbutton").click(function(){
@@ -42,10 +61,11 @@
     });
   }
 
-  function reply(tweetid, screenName){
+  function reply(tweetid, user, screenName){
     $(document.body).append("<div id='dialog' style='width: 95%; left: 2px; top: 0px;'>"+
-      "<textarea id='replyText' rows='3' cols='40'>@" + screenName +
-      "</textarea><button id='okbutton'> OK </button> <button id='cancelbutton'> Cancel </button> </div>");
+      "<img src='"+user.profile_image_url+"' title='"+user.user_id+"'/>"+
+      "<textarea id='replyText' rows='3' cols='38'>@" + screenName + "</textarea>" +
+      " <button id='okbutton'> OK </button> <button id='cancelbutton'> Cancel </button> </div>");
     $("#okbutton").click(function(){
       $.ajax({
         type: 'POST',
@@ -56,10 +76,7 @@
             $("#dialog").remove();
           }, 3000)
         },
-        error: function() { 
-          $("#dialog").html("Please make sure you are logged into inagist.com"); 
-          setTimeout(function(){$("#dialog").remove();}, 3000)
-        }
+        error: function() {showLogin();}
       });
     });
     $("#cancelbutton").click(function(){
@@ -67,8 +84,10 @@
     });
   }
 
-  function favorite(tweetid){
-    $(document.body).append("<div id='dialog'> Favorite this? <button id='okbutton'> OK </button> <button id='cancelbutton'> Cancel </button> </div>");
+  function favorite(tweetid, user){
+    $(document.body).append("<div id='dialog'> <img src='"+user.profile_image_url+"' title='"+user.user_id+"' />"+
+                            " Favorite this? <button id='okbutton'>"+
+                            " OK </button> <button id='cancelbutton'> Cancel </button> </div>");
     $("#okbutton").click(function(){
       $.ajax({
         type: 'POST',
@@ -79,10 +98,7 @@
             $("#dialog").remove();
           }, 3000)
         },
-        error: function() { 
-          $("#dialog").html("Please make sure you are logged into inagist.com"); 
-          setTimeout(function(){$("#dialog").remove();}, 3000)
-        }
+        error: function() {showLogin();}
       });
     });
     $("#cancelbutton").click(function(){
@@ -108,12 +124,13 @@
     var image = jQuery("<img src='" + userImage +"' />");
     
     var tweetActions = jQuery("<div></div>").addClass("actionbar");
-    var retweetAction = jQuery("<span class='action'></span>").addClass("retweet").click(function(){
-      retweet(tweetId);});
-    var replyAction = jQuery("<span class='action'></span>").addClass("reply").click(function(){
-      reply(tweetId, screenName);});
-    var favoriteAction = jQuery("<span class='action'></span>").addClass("favorite").click(function(){
-      favorite(tweetId);});
+    var retweetAction = jQuery("<span class='action' title='Retweet'></span>").addClass("retweet").click(function(){
+      getUserDetails(function(data){retweet(tweetId, data);}, function(){showLogin();});});
+    var replyAction = jQuery("<span class='action' title='Reply'></span>").addClass("reply").click(function(){
+      getUserDetails(function(data){reply(tweetId, data, screenName);}, 
+                     function(){showLogin();});});
+    var favoriteAction = jQuery("<span class='action' title='Favorite'></span>").addClass("favorite").click(function(){
+      getUserDetails(function(data){favorite(tweetId, data);}, function(){showLogin();});});
     tweetActions.append(retweetAction).append(replyAction).append(favoriteAction);
     
     var name = jQuery("<span><a href='http://twitter.com/" + screenName + 

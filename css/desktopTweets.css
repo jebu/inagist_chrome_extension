@@ -76,7 +76,7 @@ html, body {
   position: fixed;
   left: 90px;
   background-color: #aaa;
-  width: 100px;
+  width: 120px;
   top: 5px;
   padding: 10px;
   font-family: georgia;
@@ -91,4 +91,9 @@ html, body {
 }
 #dialog textarea {
   font-size: 10px;
+}
+#dialog img {
+  height: 24px;
+  width: 24px;
+  margin-right: 3px;
 }
