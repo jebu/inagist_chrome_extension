@@ -18,29 +18,33 @@ function show(message, image, title) {
     title, // The title.
     message      // The body.
   );
+  notification.ondisplay = function() {
+    if (Options.get("autoClose")) {
+      var closeTimer = setTimeout(function() {
+        notification.cancel();
+      }, Options.get("alertTimeout"));
+      notification.onclick = function() {
+        clearTimeout(closeTimer)
+      };
+    }
+  };
   notification.show();
-  if (Options.get("autoClose")) {
-    var closeTimer = setTimeout(function() {
-      notification.cancel();
-    }, Options.get("alertTimeout"));
-    notification.onclick = function() {
-      clearTimeout(closeTimer)
-    };
-  }
 }
 
 function showHtml() {
   var notification = webkitNotifications.createHTMLNotification(
     'tweets_notifier.html'
   );
-  if (Options.get("autoClose")) {
-    var closeTimer = setTimeout(function() {
-      notification.cancel();
-    }, Options.get("alertTimeout"));
-    notification.onclick = function() {
-      clearTimeout(closeTimer)
-    };
-  }
+  notification.ondisplay = function() {
+    if (Options.get("autoClose")) {
+      var closeTimer = setTimeout(function() {
+        notification.cancel();
+      }, Options.get("alertTimeout"));
+      notification.onclick = function() {
+        clearTimeout(closeTimer)
+      };
+    }
+  };
   notification.show();
 }
 
