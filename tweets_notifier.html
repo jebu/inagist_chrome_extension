@@ -61,29 +61,6 @@
     });
   }
 
-  function reply(tweetid, user, screenName){
-    $(document.body).append("<div id='dialog' style='width: 95%; left: 2px; top: 0px;'>"+
-      "<img src='"+user.profile_image_url+"' title='"+user.user_id+"'/>"+
-      "<textarea id='replyText' rows='3' cols='38'>@" + screenName + "</textarea>" +
-      " <button id='okbutton'> OK </button> <button id='cancelbutton'> Cancel </button> </div>");
-    $("#okbutton").click(function(){
-      $.ajax({
-        type: 'POST',
-        url:"http://inagist.com/reply.php?tweet_id=" + tweetid + "&tweet_text="+ $("#replyText").text(),
-        success: function(){ 
-          $("#dialog").html("Reply sent"); 
-          setTimeout(function(){
-            $("#dialog").remove();
-          }, 3000)
-        },
-        error: function() {showLogin();}
-      });
-    });
-    $("#cancelbutton").click(function(){
-      $("#dialog").remove();
-    });
-  }
-
   function favorite(tweetid, user){
     $(document.body).append("<div id='dialog'> <img src='"+user.profile_image_url+"' title='"+user.user_id+"' />"+
                             " Favorite this? <button id='okbutton'>"+
@@ -127,7 +104,7 @@
     var retweetAction = jQuery("<span class='action' title='Retweet'></span>").addClass("retweet").click(function(){
       getUserDetails(function(data){retweet(tweetId, data);}, function(){showLogin();});});
     var replyAction = jQuery("<span class='action' title='Reply'></span>").addClass("reply").click(function(){
-      getUserDetails(function(data){reply(tweetId, data, screenName);}, 
+      getUserDetails(function(data){openTweetTab("http://inagist.com/"+screenName+"/"+tweetId);}, 
                      function(){showLogin();});});
     var favoriteAction = jQuery("<span class='action' title='Favorite'></span>").addClass("favorite").click(function(){
       getUserDetails(function(data){favorite(tweetId, data);}, function(){showLogin();});});
@@ -152,6 +129,14 @@
     var notification = notificationQueue.pop();
     if (notification.id) {
       renderTweet(notification, $(document.body));
+    }
+    if (Options.get("autoClose")) {
+      var closeTimer = setTimeout(function() {
+        window.close();
+      }, Options.get("alertTimeout"));
+      window.onclick = function() {
+        clearTimeout(closeTimer)
+      };
     }
   });
   </script>

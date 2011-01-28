@@ -2,43 +2,61 @@
 <html>
 <head>
 <script type="text/javascript" src="lib/3rdparty/jquery.js"></script>
-
+<link rel="stylesheet" type="text/css" href="css/options.css" />
 <title>inagist.com Options</title>
 </head>
 <body>
-  <h1> inagist.com Options </h1>
-  <div>
+  <header>
+    <a title="In-A-Gist" href="http://inagist.com/"><img src="img/logo.png" border="0" alt="inagist" /></a> options
+  </header>
+  <div id="optionsbox">
     <table>
       <tr>
-        <td>User Id : </td>
-        <td><input type="text" name="iconnecteduser" onChange="saveValues(); reconnect();"/></td>
+        <td>User Id </td>
+        <td>
+          <input type="text" name="iconnecteduser" onChange="saveValues(); reconnect();"/>
+        </td>
       </tr>
       <tr>
-        <td>Alert Time : </td>
-        <td><input type="text" name="ialerttime" onChange="saveValues();"/></td>
+        <td>Alert Time </td>
+        <td>
+          <input type="text" name="ialerttime" onChange="saveValues();"/>
+        </td>
       </tr>
       <tr>
-        <td>Auto Close : </td>
-        <td><input type="checkbox" name="iautoclose" onChange="saveValues();"/></td>
+        <td>Auto Close </td>
+        <td>
+          <input type="checkbox" name="iautoclose" id="iautoclose" onChange="saveValues();"/>
+          <label class="check" for="iautoclose"></label>
+        </td>
       </tr>
       <tr>
-        <td>Auto Track Trends : </td>
-        <td><input type="checkbox" name="iautotracktrends" onChange="saveValues();"/></td>
+        <td>Auto Track Trends </td>
+        <td>
+          <input type="checkbox" name="iautotracktrends" id="iautotracktrends" onChange="saveValues();"/>
+          <label class="check" for="iautotracktrends"></label>
+        </td>
       </tr>
       <tr>
-        <td>Auto Track Channel Trends : </td>
-        <td><input type="checkbox" name="iautotrackchanneltrends" onChange="saveValues();"/></td>
+        <td>Auto Track Channel Trends </td>
+        <td>
+          <input type="checkbox" name="iautotrackchanneltrends" id="iautotrackchanneltrends" onChange="saveValues();"/>
+          <label class="check" for="iautotrackchanneltrends"></label>
+        </td>
       </tr>
       <tr>
-        <td>Use Secure Connection : </td>
-        <td><input type="checkbox" name="iencrypt" onChange="saveValues(); reconnect();"/></td>
+        <td>Use Secure Connection </td>
+        <td>
+          <input type="checkbox" name="iencrypt" id="iencrypt" onChange="saveValues(); reconnect();"/>
+          <label class="check" for="iencrypt"></label>
+        </td>
       </tr>
       <tr>
-        <td>Search Terms : </td>
+        <td>Search Terms </td>
         <td><textarea name="isearch" cols="80" rows="5" onChange="saveValues(); reloadSearch();"></textarea></td>
       </tr>
       <tr>
-        <td>Ignored Trends : </td>
+        <td>Ignored Trends </td>
         <td><textarea name="iignored" cols="80" rows="5" onChange="saveValues(); reloadSearch();"></textarea></td>
       </tr>
     </table>

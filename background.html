@@ -5,17 +5,6 @@
 <script type="text/javascript" src="lib/utils.js"></script>
 <script type="text/javascript" src="lib/instaket.js"></script>
 <script>
-function notificationTimeout(){
-  if (Options.get("autoClose")) {
-    var closeTimer = setTimeout(function() {
-      notification.cancel();
-    }, Options.get("alertTimeout"));
-    notification.onclick = function() {
-      clearTimeout(closeTimer)
-    };
-  }
-}
-
 function log(Message){
   if (Options.getBoolean("debug"))
     console.log(Message);
@@ -29,7 +18,6 @@ function show(message, image, title) {
     title, // The title.
     message      // The body.
   );
-  notification.ondisplay = notificationTimeout;
   notification.show();
 }
 
@@ -37,7 +25,6 @@ function showHtml() {
   var notification = webkitNotifications.createHTMLNotification(
     'tweets_notifier.html'
   );
-  notification.ondisplay = notificationTimeout;
   notification.show();
 }
 
