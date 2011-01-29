@@ -16,14 +16,14 @@ body{
 header{
   font-weight:bold;
   font-size:36px;
-  color:#222;
+  color:rgba(161,161,161,0.7);
   text-align:center;
   font-family:georgia;
   writing-mode: tb-rl; 
   -webkit-transform: rotate(270deg); 
   position: fixed; 
-  top: 50%; 
-  left: -100px;
+  top: 35%; 
+  left: -130px;
   z-index: -1;
 }
 
@@ -33,13 +33,14 @@ header img{
 
 #optionsbox{
   width: 90%;
-  margin: 2% 5%;
+  padding: 2% 5%;
 }
 
 input{
   opacity: 0.7;
-  background-color: #aaa;
-  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background-color: rgba(204,204,204,0.9);
+	background: rgba(244,244,244,0.9) -webkit-gradient(linear, 100% 100%, 50% 50%, from(rgba(141,141,141,0.9)), to(rgba(244,244,244,0.9)));
 }
 
 input[type=text]{
@@ -54,8 +55,9 @@ input[type=checkbox] {
 
 textarea{
   opacity: 0.7;
-  background-color: #aaa;
-  -webkit-border-radius: 5px;
+  background-color: rgba(204,204,204,0.9);
+	background: rgba(244,244,244,0.9) -webkit-gradient(linear, 100% 100%, 50% 50%, from(rgba(141,141,141,0.9)), to(rgba(244,244,244,0.9)));
+  border-radius: 5px;
   padding-left: 4px;
   font-family: georgia;
   font-size: 16px;
