@@ -33,6 +33,10 @@ function showTweetNotification(tweet_id, tipText){
     iSocket.lookuptweet(tweet_id, function(data){
       data.corelation = tipText;
       sessionStorage.setItem(tweet_id, true);
+      var date = new Date(Date.parse(data.created_at));
+      if (tipText != undefined && 
+          (((new Date()).getTime() - date.getTime()) / 1000) > Options.getInt("relevanceTime"))
+        return;
       notificationQueue.push(data);
       showHtml();
     });

@@ -8,6 +8,11 @@
 <body>
   <header>
     <a title="In-A-Gist" href="http://inagist.com/"><img src="img/logo.png" border="0" alt="inagist" /></a> &larr; options </header>
+  <div id="html5banner">
+    <a href="http://www.w3.org/html/logo/">
+<img src="http://www.w3.org/html/logo/badge/html5-badge-v-connectivity-css3-graphics-storage.png" width="38" height="202" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, and Offline &amp; Storage" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, and Offline &amp; Storage">
+</a>
+  </div>
   <div id="optionsbox">
     <table>
       <tr>
@@ -20,6 +25,12 @@
         <td class="typekit">Alert Time </td>
         <td>
           <input type="text" name="ialerttime" onChange="saveValues();"/>
+        </td>
+      </tr>
+      <tr>
+        <td class="typekit">Relevance Time </td>
+        <td>
+          <input type="text" name="irelevancetime" onChange="saveValues();"/>
         </td>
       </tr>
       <tr>
@@ -60,10 +71,24 @@
       </tr>
     </table>
   </div>
+	<div id="template_footer" style="padding-bottom: 5px; padding-top: 5px;"> 
+        <div align="center" style="padding-bottom: 5px; padding-top: 5px;"> 
+        	<span>Follow Us</span> : 
+        		<a href="http://twitter.com/inagist" target="_blank">Twitter</a> | 
+                <a href="http://facebook.com/inagist" target="_blank">Facebook</a> 
+        </div> 
+        <div align="center" style="padding-bottom: 5px; padding-top: 5px;"> 
+        	Copyright &copy; 2010 <a href="http://iyottasoft.com">Iyottasoft.com</a> | 
+          Powered By <a href="http://inagist.com">In-A-Gist</a> 
+        </div> 
+        <div class="clear">
+        </div>
+        </div>
 <script>
   var Options = chrome.extension.getBackgroundPage().Options;
   $("input[name='iconnecteduser']")[0].value = Options.get("userid");
   $("input[name='ialerttime']")[0].value = Options.get("alertTimeout");
+  $("input[name='irelevancetime']")[0].value = Options.getInt("relevanceTime");
   $("textarea[name='isearch']")[0].value = Options.get("searchText");
   $("textarea[name='iignored']")[0].value = Options.get("ignoredTrends");
   $("input[name='iautoclose']")[0].checked = Options.getBoolean("autoClose");
@@ -73,6 +98,7 @@
   function saveValues() {
     Options.set("userid", $("input[name='iconnecteduser']")[0].value);
     Options.set("alertTimeout", $("input[name='ialerttime']")[0].value);
+    Options.set("relevanceTime", $("input[name='irelevancetime']")[0].value);
     Options.set("searchText", $("textarea[name='isearch']")[0].value);
     Options.set("ignoredTrends", $("textarea[name='iignored']")[0].value);
     Options.set("autoClose", $("input[name='iautoclose']")[0].checked);
