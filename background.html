@@ -28,6 +28,17 @@ function showHtml() {
   notification.show();
 }
 
+function showTweetNotification(tweet_id, tipText){
+  if (sessionStorage.getItem(tweet_id) == null) {
+    iSocket.lookuptweet(tweet_id, function(data){
+      data.corelation = tipText;
+      sessionStorage.setItem(tweet_id, true);
+      notificationQueue.push(data);
+      showHtml();
+    });
+  }
+}
+
 function iconAlert(Color, Text) {
   chrome.browserAction.setBadgeBackgroundColor({color: Color});
   chrome.browserAction.setBadgeText({text: Text});
@@ -113,11 +124,7 @@ function connect() {
         if (Options.get("autoTrackTrends") === true || Options.get("autoTrackTrends") == "true")
           sendSearchTerms();
       }
-      iSocket.lookuptweet(trending_personal_phrase.id_str, function(data){
-        data.corelation = tipText;
-        notificationQueue.push(data);
-        showHtml();
-      });
+      showTweetNotification(trending_personal_phrase.id_str, tipText);
     });
 
     $(iSocket).bind('trending_channel_phrase', function(event, trending_channel_phrase) {
@@ -128,39 +135,23 @@ function connect() {
         if (Options.get("autoTrackChannelTrends") === true || Options.get("autoTrackChannelTrends") == "true")
           sendSearchTerms();
       }
-      iSocket.lookuptweet(trending_channel_phrase.id_str, function(data){
-        data.corelation = tipText;
-        notificationQueue.push(data);
-        showHtml();
-      });
+      showTweetNotification(trending_channel_phrase.id_str, tipText);
     });
 
     $(iSocket).bind('tweet_archived', function(event, tweet) {
-      iSocket.lookuptweet(tweet.id_str, function(data){
-        data.corelation = undefined;
-        notificationQueue.push(data);
-        showHtml();
-      });
+      showTweetNotification(tweet.id_str, undefined);
     });
 
     $(iSocket).bind('search_result', function(event, search_result) {
       if (search_result.ids) {
         for (var i in search_result.ids) {
-          iSocket.lookuptweet(search_result.ids[i], function(data){
-            data.corelation = undefined;
-            notificationQueue.push(data);
-            showHtml();
-          });
+          showTweetNotification(search_result.ids[i], undefined);
         }
       } else {
-        var corelationText = "";
+        var corelationText = undefined;
         if (search_result.text)
           corelationText = " match " + search_result.text;
-        iSocket.lookuptweet(search_result.id_str, function(data){
-          data.corelation = corelationText;
-          notificationQueue.push(data);
-          showHtml();
-        });
+        showTweetNotification(search_result.id_str, corelationText);
       }
     });
 
@@ -184,7 +175,8 @@ function disconnect() {
 }
 
 function toggleConnection() {
-  if ((typeof iSocket == 'undefined' || typeof iSocket.ws == 'undefined') || (iSocket.ws.readyState === iSocket.ws.CLOSED)) {
+  if ((typeof iSocket == 'undefined' || typeof iSocket.ws == 'undefined') || 
+      (iSocket.ws.readyState === iSocket.ws.CLOSED)) {
     connectedUser = Options.get("userid");
     if (connectedUser && connectedUser.trim().length > 0)
       connect();
@@ -194,6 +186,7 @@ function toggleConnection() {
 }
 
 function reConnect() {
+  sessionStorage.clear();
   disconnect();
   toggleConnection();
 }
