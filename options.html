@@ -16,61 +16,79 @@
   <div id="optionsbox">
     <table>
       <tr>
-        <td class="typekit">User Id </td>
+        <td class="typekit tooltip" title="Your twitter id authenticated against inagist.com">User Id </td>
         <td>
           <input type="text" name="iconnecteduser" onChange="saveValues(); reconnect();"/>
         </td>
       </tr>
       <tr>
-        <td class="typekit">Alert Time </td>
+        <td class="typekit tooltip" title="Time in seconds the alert is shown, when auto close is on">
+          Alert Time 
+        </td>
         <td>
           <input type="text" name="ialerttime" onChange="saveValues();"/>
         </td>
       </tr>
       <tr>
-        <td class="typekit">Relevance Time </td>
+        <td class="typekit tooltip" title="For tweets qualified by auto search terms, 
+                  max age in seconds for tweet to be shown">
+          Relevance Time
+        </td>
         <td>
           <input type="text" name="irelevancetime" onChange="saveValues();"/>
         </td>
       </tr>
       <tr>
-        <td class="typekit">Auto Close </td>
+        <td class="typekit tooltip" title="Close alerts automatically?">
+          Auto Close 
+        </td>
         <td>
           <input type="checkbox" name="iautoclose" id="iautoclose" onChange="saveValues();"/>
           <label class="check" for="iautoclose"></label>
         </td>
       </tr>
       <tr>
-        <td class="typekit">Auto Track Trends </td>
+        <td class="typekit tooltip" title="Automatically start searching for detected trends?">
+          Auto Track Trends 
+        </td>
         <td>
           <input type="checkbox" name="iautotracktrends" id="iautotracktrends" onChange="saveValues();"/>
           <label class="check" for="iautotracktrends"></label>
         </td>
       </tr>
       <tr>
-        <td class="typekit">Auto Track Channel Trends </td>
+        <td class="typekit tooltip" title="Automatically start searching for detected channel trends?">
+          Auto Track Channel Trends 
+        </td>
         <td>
           <input type="checkbox" name="iautotrackchanneltrends" id="iautotrackchanneltrends" onChange="saveValues();"/>
           <label class="check" for="iautotrackchanneltrends"></label>
         </td>
       </tr>
       <tr>
-        <td class="typekit">Use Secure Connection </td>
+        <td class="typekit tooltip" title="Use a secure websocket connection? Good for tunnelling through proxies.">
+          Use Secure Connection 
+        </td>
         <td>
           <input type="checkbox" name="iencrypt" id="iencrypt" onChange="saveValues(); reconnect();"/>
           <label class="check" for="iencrypt"></label>
         </td>
       </tr>
       <tr>
-        <td class="typekit">Search Terms </td>
+        <td class="typekit tooltip" title="Default search terms, will notify you with tweets for these terms">
+          Search Terms 
+        </td>
         <td><textarea name="isearch" cols="80" rows="4" onChange="saveValues(); reloadSearch();"></textarea></td>
       </tr>
       <tr>
-        <td class="typekit">Ignored Trends </td>
+        <td class="typekit tooltip" title="Never track these terms when auto tracking trends">
+          Ignored Trends 
+        </td>
         <td><textarea name="iignored" cols="80" rows="4" onChange="saveValues(); reloadSearch();"></textarea></td>
       </tr>
     </table>
   </div>
+  <div id="tiptext"></div>
 	<div id="template_footer" style="padding-bottom: 5px; padding-top: 5px;"> 
         <div align="center" style="padding-bottom: 5px; padding-top: 5px;"> 
         	<span>Follow Us</span> : 

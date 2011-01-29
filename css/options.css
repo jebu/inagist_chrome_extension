@@ -32,12 +32,12 @@ header img{
 }
 
 #html5banner{
-  float: right;
-  display: inline;
+  position: fixed;
+  top: 15%;
+  right: -4px;
 	background: rgba(211,211,211,0.5);
-  padding: 2px;
   margin: 5px;
- 	-webkit-box-shadow: 0 0 5px 5px #555;
+ 	-webkit-box-shadow: 0 0 5px 7px #555;
 }
 
 #optionsbox{
@@ -136,4 +136,8 @@ input[type=checkbox] + label.check {
 
 #template_footer a{
   color: #ccc;
+}
+
+.tooltip {
+  width: 210px;
 }
