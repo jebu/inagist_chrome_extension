@@ -202,13 +202,22 @@ chrome.idle.onStateChanged.addListener(function(newState){
 
 var notificationQueue = [];
 var iSocket = null;
-var connectedUser = Options.get("userid");
 var autoTracked = [];
 var autoTrackedChannel = [];
 var searchTimer = undefined;
+var connectedUser = undefined;
 
 chrome.browserAction.onClicked.addListener(toggleConnection);
 iconAlert([200, 10, 10, 228], "Off");
+if (typeof Options.get("userid") == 'undefined')
+  getUserDetails(
+    function(data){
+      Options.set("userid", data.user_id);
+      connectedUser = Options.get("userid");
+      connect();
+    },
+    function(){});
+connectedUser = Options.get("userid");
 if (connectedUser)
   connect();
 </script>

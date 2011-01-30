@@ -19,19 +19,6 @@
     chrome.tabs.create({url: url});
   }
   
-  function getUserDetails(success, failure){
-    $.ajax({
-      type: 'GET',
-      url: 'http://inagist.com/getuser.php',
-      success: function(data){
-        success(data);
-      },
-      error: function(){
-        failure();
-      }
-    });
-  }
-
   function showLogin(){
     if ($("#dialog").length < 1)
       $(document.body).append("<div id='dialog'></div>");
