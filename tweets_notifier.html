@@ -19,6 +19,18 @@
     chrome.tabs.create({url: url});
   }
   
+  function setupAutoClose(time){
+    if (Options.get("autoClose")) {
+      time = time ? time : Options.get("alertTimeout");
+      var closeTimer = setTimeout(function() {
+        window.close();
+      }, time);
+      window.onclick = function() {
+        clearTimeout(closeTimer)
+      };
+    }
+  }
+  
   function showLogin(){
     if ($("#dialog").length < 1)
       $(document.body).append("<div id='dialog'></div>");
@@ -38,7 +50,8 @@
           $("#dialog").html("Retweeted"); 
           setTimeout(function(){
             $("#dialog").remove();
-          }, 3000)
+          }, 3000);
+          setupAutoClose(4000);
         },
         error: function() {showLogin();}
       });
@@ -60,7 +73,8 @@
           $("#dialog").html("Favorited"); 
           setTimeout(function(){
             $("#dialog").remove();
-          }, 3000)
+          }, 3000);
+          setupAutoClose(4000);
         },
         error: function() {showLogin();}
       });
@@ -111,20 +125,13 @@
           append(contenxtSpan);
     container.append(tweet);
   }
-
+  
   $(function() {
     var notification = notificationQueue.pop();
     if (notification.id) {
       renderTweet(notification, $(document.body));
     }
-    if (Options.get("autoClose")) {
-      var closeTimer = setTimeout(function() {
-        window.close();
-      }, Options.get("alertTimeout"));
-      window.onclick = function() {
-        clearTimeout(closeTimer)
-      };
-    }
+    setupAutoClose();
   });
   </script>
 </head>
