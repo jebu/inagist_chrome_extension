@@ -70,7 +70,7 @@ function trimElement(element) {
   return element.trim();
 }
 
-function sendSearchTerms() {
+function getSearchTerms(){
   var searchTerms = Options.get("searchText").split(",").map(trimElement);
   var ignoredTrends = [];
   
@@ -91,7 +91,11 @@ function sendSearchTerms() {
     }
   }
 
-  var text = searchTerms.slice(0, 20).join(",");
+  return searchTerms.slice(0, 20).join(", ");
+}
+
+function sendSearchTerms() {
+  var text = getSearchTerms();
   sendSearch(text);
 }
 

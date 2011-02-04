@@ -87,13 +87,19 @@
         <td class="typekit tooltip" title="Default search terms, will notify you with tweets for these terms">
           Search Terms 
         </td>
-        <td><textarea name="isearch" cols="80" rows="4" onChange="saveValues(); reloadSearch();"></textarea></td>
+        <td><textarea name="isearch" cols="80" rows="3" onChange="saveValues(); reloadSearch();"></textarea></td>
       </tr>
       <tr>
         <td class="typekit tooltip" title="Never track these terms when auto tracking trends">
           Ignored Trends 
         </td>
-        <td><textarea name="iignored" cols="80" rows="4" onChange="saveValues(); reloadSearch();"></textarea></td>
+        <td><textarea name="iignored" cols="80" rows="3" onChange="saveValues(); reloadSearch();"></textarea></td>
+      </tr>
+      <tr>
+        <td class="typekit tooltip" title="Current search terms">
+          Current Search
+        </td>
+        <td><textarea name="icsearch" cols="80" rows="3" disabled="true"></textarea></td>
       </tr>
     </table>
   </div>
@@ -118,6 +124,7 @@
   $("input[name='irelevancetime']")[0].value = Options.getInt("relevanceTime");
   $("textarea[name='isearch']")[0].value = Options.get("searchText");
   $("textarea[name='iignored']")[0].value = Options.get("ignoredTrends");
+  $("textarea[name='icsearch']")[0].value = chrome.extension.getBackgroundPage().getSearchTerms();
   $("input[name='iautoclose']")[0].checked = Options.getBoolean("autoClose");
   $("input[name='ishowulang']")[0].checked = Options.getBoolean("showUnknownLanguages");
   $("input[name='iautotracktrends']")[0].checked = Options.getBoolean("autoTrackTrends");
@@ -137,6 +144,7 @@
   }
   function reloadSearch() {
     chrome.extension.getBackgroundPage().sendSearchTerms();
+    $("textarea[name='icsearch']")[0].value = chrome.extension.getBackgroundPage().getSearchTerms();
   }
   function reconnect() {
     chrome.extension.getBackgroundPage().reConnect();
