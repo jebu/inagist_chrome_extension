@@ -5,10 +5,21 @@ html, body {
   overflow: hidden;
 }
 
+.alertArea{
+  height: 110px;
+  background-color: #eeeeee;
+}
+
 .tweet {
   font-size: 9pt;
   background-color: #eeeeee;
   margin: 2px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 0;
+  width: 100%;
+  height: 100%
 }
 
 .tweet img {
@@ -46,6 +57,15 @@ html, body {
 
 .tweet .actionbar{
   float: right;
+  margin-right: 2px;
+}
+
+.tweet .tweetfooter{
+  margin-top: 5px;
+}
+
+.tweet_overlay {
+  z-index: 50;
 }
 
 .actionbar .action {

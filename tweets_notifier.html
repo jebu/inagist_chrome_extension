@@ -18,12 +18,30 @@
   function openTweetTab(url){
     chrome.tabs.create({url: url});
   }
-  
+ 
+  function animateScroll(container){
+    $(container).animate({opacity: 0}, 3000, function(){
+      $(container).remove();
+      setupAutoClose();
+    });
+  }
+
+
   function setupAutoClose(time){
     if (Options.get("autoClose")) {
       time = time ? time : Options.get("alertTimeout");
       var closeTimer = setTimeout(function() {
-        window.close();
+        if (notificationQueue.length > 0){
+          $(".tweet").addClass('tweet_overlay');
+          var notification = notificationQueue.pop();
+          if (notification.id) {
+            renderTweet(notification, $(".alertArea"));
+          }
+          animateScroll(".tweet_overlay");
+        } else {
+          window.close();
+          chrome.extension.getBackgroundPage().notificationOnDisplay = false;
+        }
       }, time);
       window.onclick = function() {
         clearTimeout(closeTimer)
@@ -114,28 +132,29 @@
     var name = jQuery("<span><a href='http://twitter.com/" + screenName + 
                       "'>" + screenName +"</a></span>").addClass("name");
     var text = jQuery("<span>" + tweetText +"</span>").addClass("text");
-    var footer = jQuery("<span>" + prettyDate(createdAt) +"</span>").addClass("timestamp").
+    var footer = jQuery("<div class='tweetfooter'></div>");
+    var timestamp = jQuery("<span>" + prettyDate(createdAt) +"</span>").addClass("timestamp").
                         click(function(){
                           openTweetTab("http://twitter.com/" + screenName + "/status/" + tweetId);
                         });
-    var contenxtSpan = jQuery("<span class='tweetcontext'>" + footerContext + "</span>");
-    
+    var contextSpan = jQuery("<span class='tweetcontext'>" + footerContext + "</span>");
+    footer.append(timestamp).append(contextSpan);
     tweet.append(image).append(tweetActions).append(name).append("<br/>").append(text).
-          append("<div style='clear: both;'></div>").append(footer).
-          append(contenxtSpan);
+          append("<div style='clear: both;'></div>").append(footer);
     container.append(tweet);
   }
   
   $(function() {
     var notification = notificationQueue.pop();
     if (notification.id) {
-      renderTweet(notification, $(document.body));
+      renderTweet(notification, $(".alertArea"));
     }
     setupAutoClose();
   });
   </script>
 </head>
 <body>
+   <div class="alertArea"></div>
    <script>
      var _gaq = _gaq || [];
      _gaq.push(['_setAccount', 'UA-16053252-4']);

@@ -22,10 +22,13 @@ function show(message, image, title) {
 }
 
 function showHtml() {
-  var notification = webkitNotifications.createHTMLNotification(
-    'tweets_notifier.html'
-  );
-  notification.show();
+  if (!notificationOnDisplay){
+    notificationOnDisplay = true;
+    var notification = webkitNotifications.createHTMLNotification(
+      'tweets_notifier.html'
+    );
+    notification.show();
+  }
 }
 
 function showTweetNotification(tweet_id, tipText){
@@ -218,6 +221,7 @@ var autoTracked = [];
 var autoTrackedChannel = [];
 var searchTimer = undefined;
 var connectedUser = undefined;
+var notificationOnDisplay = false;
 
 chrome.browserAction.onClicked.addListener(toggleConnection);
 iconAlert([200, 10, 10, 228], "Off");
