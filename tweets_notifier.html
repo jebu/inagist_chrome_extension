@@ -13,7 +13,9 @@
 
   <script type="text/javascript">
   var notificationQueue = chrome.extension.getBackgroundPage().notificationQueue;
+  var archivalQueue = chrome.extension.getBackgroundPage().archivalQueue;
   var Options = chrome.extension.getBackgroundPage().Options;
+  var archiveCount = 0;
   
   function openTweetTab(url){
     chrome.tabs.create({url: url});
@@ -27,22 +29,58 @@
   }
 
   function updateNotificationCount(){
-    $("#notificationCount").html(notificationQueue.length);
+    $("#notificationCount").html(notificationQueue.length + archiveCount);
+  }
+
+  function renderNextNotification(){
+    var notification = undefined;
+    if (archiveCount > 0){
+      archiveCount--;
+      notification = archivalQueue[archiveCount];
+    } else if (notificationQueue.length > 0) {
+      notification = notificationQueue.pop();
+      archivalQueue.unshift(notification);
+    }
+    if (notification) {
+      chrome.extension.sendRequest({id: notification}, function(data){
+        renderTweet(data, $(".alertArea"));
+      });
+    }
+  }
+
+  function renderPrevNotification(){
+    var notification = undefined;
+    if (archiveCount < archivalQueue.length){
+      archiveCount++;
+      notification = archivalQueue[archiveCount];
+    }
+    if (notification) {
+      chrome.extension.sendRequest({id: notification}, function(data){
+        renderTweet(data, $(".alertArea"), "tweetprev");
+      });
+    }
   }
 
   function scrollNotification(){
     if (notificationQueue.length > 0){
       $(".tweet").addClass('tweet_overlay');
-      var notification = notificationQueue.pop();
-      if (notification.id) {
-        renderTweet(notification, $(".alertArea"));
-      }
+      renderNextNotification();
       animateScroll(".tweet_overlay");
       updateNotificationCount();
     } else {
       window.close();
       chrome.extension.getBackgroundPage().notificationOnDisplay = false;
     }
+  }
+
+  function scrollPrevNotification(){
+    $(".tweet").addClass("tweetnext");
+    renderPrevNotification();
+    $(".tweetprev").addClass("animate_right");
+    setTimeout(function(){
+      $(".tweetnext").remove();
+      $(".tweetprev").removeClass("tweetprev");
+    }, 1900);
   }
 
   function setupAutoClose(time){
@@ -111,7 +149,7 @@
     });
   }
 
-  function renderTweet(tweet, container) {
+  function renderTweet(tweet, container, additionalClass) {
     var screenName = tweet.user.screen_name;
     var userImage = tweet.user.profile_image_url;
     var tweetText = twitterlib.ify.clean(tweet.text);
@@ -150,23 +188,26 @@
     footer.append(timestamp).append(contextSpan);
     tweet.append(image).append(tweetActions).append(name).append("<br/>").append(text).
           append("<div style='clear: both;'></div>").append(footer);
+    if (additionalClass)
+      tweet.addClass(additionalClass);
     container.append(tweet);
   }
   
   $(function() {
-    var notification = notificationQueue.pop();
+    renderNextNotification();
+    setupAutoClose();
     setInterval(function(){
       updateNotificationCount();
     }, 500);
-    if (notification.id) {
-      renderTweet(notification, $(".alertArea"));
-    }
-    setupAutoClose();
     $("#notificationNext").click(function(){
       if (notificationQueue.length > 0) 
         scrollNotification();
       else
         window.close();
+    });
+    $("#notificationPrev").click(function(){
+      if (archivalQueue.length > archiveCount) 
+        scrollPrevNotification();
     });
   });
   </script>
@@ -174,7 +215,7 @@
 <body>
    <div class="alertArea">
     <div id="notificationStatus">
-      <!--<span id="notificationPrev" class="notificationNav"> Prev </span>-->
+      <span id="notificationPrev" class="notificationNav"> Prev </span>
       <span id="notificationNext" class="notificationNav"> Next </span>
       <span id="notificationCount"></span>
     </div>

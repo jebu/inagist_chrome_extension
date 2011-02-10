@@ -5,6 +5,11 @@
 <script type="text/javascript" src="lib/utils.js"></script>
 <script type="text/javascript" src="lib/instaket.js"></script>
 <script>
+chrome.extension.onRequest.addListener(
+  function(request, sender, sendResponse) {
+    sendResponse(JSON.parse(sessionStorage.getItem(request.id)));
+  });
+
 function log(Message){
   if (Options.getBoolean("debug"))
     console.log(Message);
@@ -34,7 +39,8 @@ function showHtml() {
 function showTweetNotification(tweet_id, tipText){
   if (sessionStorage.getItem(tweet_id) == null) {
     iSocket.lookuptweet(tweet_id, function(data){
-      sessionStorage.setItem(tweet_id, true);
+      data.corelation = tipText;
+      sessionStorage.setItem(tweet_id, JSON.stringify(data));
       chrome.i18n.getAcceptLanguages(function(langs){
         if (Options.getBoolean("showUnknownLanguages") ||
             typeof data.language == "undefined" || 
@@ -44,8 +50,7 @@ function showTweetNotification(tweet_id, tipText){
           if (tipText != undefined && 
               (((new Date()).getTime() - date.getTime()) / 1000) > Options.getInt("relevanceTime"))
             return;
-          data.corelation = tipText;
-          notificationQueue.push(data);
+          notificationQueue.push(tweet_id);
           showHtml();
         }
       });
@@ -216,6 +221,7 @@ chrome.idle.onStateChanged.addListener(function(newState){
 });
 
 var notificationQueue = [];
+var archivalQueue = [];
 var iSocket = null;
 var autoTracked = [];
 var autoTrackedChannel = [];

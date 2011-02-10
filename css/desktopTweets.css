@@ -112,6 +112,11 @@ html, body {
   -webkit-box-shadow: 0 0 2px 2px rgba(20,20,20,0.9);
 }
 
+.tweetprev{
+  left: 300px;
+  z-index: 50;
+}
+
 .actionbar .action {
   background-image: url("../img/iconsprite.gif");
   background-repeat: no-repeat;
@@ -173,6 +178,21 @@ html, body {
 
 .animate_left{
   -webkit-animation-name: rollleft;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-timing-function: ease-in;
+}
+
+@-webkit-keyframes rollright{
+  100% {
+    left: 0;
+  }
+  0% {
+    left: 300px;
+  }
+}
+
+.animate_right{
+  -webkit-animation-name: rollright;
   -webkit-animation-duration: 2s;
   -webkit-animation-timing-function: ease-in;
 }
