@@ -200,8 +200,10 @@
     $("#notificationNext").click(function(){
       if ((notificationQueue.length + archiveCount) > 0) 
         scrollNotification();
-      else
+      else{
         window.close();
+        chrome.extension.getBackgroundPage().notificationOnDisplay = false;
+      }
     });
     $("#notificationPrev").click(function(){
       if (archivalQueue.length > (archiveCount+1)) 
