@@ -183,7 +183,7 @@ html, body {
 
 .animate_left{
   -webkit-animation-name: rollleft;
-  -webkit-animation-duration: 2s;
+  -webkit-animation-duration: 1s;
   -webkit-animation-timing-function: ease-in;
 }
 
@@ -198,6 +198,6 @@ html, body {
 
 .animate_right{
   -webkit-animation-name: rollright;
-  -webkit-animation-duration: 2s;
+  -webkit-animation-duration: 1s;
   -webkit-animation-timing-function: ease-in;
 }
