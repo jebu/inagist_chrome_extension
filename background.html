@@ -174,7 +174,7 @@ function connect() {
       } else {
         var corelationText = undefined;
         if (search_result.text)
-          corelationText = " match " + search_result.text;
+          corelationText = search_result.text;
         showTweetNotification(search_result.id_str, corelationText);
       }
     });
