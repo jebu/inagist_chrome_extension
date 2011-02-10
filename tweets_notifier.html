@@ -20,28 +20,37 @@
   }
  
   function animateScroll(container){
-    $(container).animate({opacity: 0}, 3000, function(){
+    $(container).addClass("animate_left");
+    setTimeout(function(){
       $(container).remove();
-      setupAutoClose();
-    });
+    }, 1900);
   }
 
+  function updateNotificationCount(){
+    $("#notificationCount").html(notificationQueue.length);
+  }
+
+  function scrollNotification(){
+    if (notificationQueue.length > 0){
+      $(".tweet").addClass('tweet_overlay');
+      var notification = notificationQueue.pop();
+      if (notification.id) {
+        renderTweet(notification, $(".alertArea"));
+      }
+      animateScroll(".tweet_overlay");
+      updateNotificationCount();
+    } else {
+      window.close();
+      chrome.extension.getBackgroundPage().notificationOnDisplay = false;
+    }
+  }
 
   function setupAutoClose(time){
     if (Options.get("autoClose")) {
       time = time ? time : Options.get("alertTimeout");
-      var closeTimer = setTimeout(function() {
-        if (notificationQueue.length > 0){
-          $(".tweet").addClass('tweet_overlay');
-          var notification = notificationQueue.pop();
-          if (notification.id) {
-            renderTweet(notification, $(".alertArea"));
-          }
-          animateScroll(".tweet_overlay");
-        } else {
-          window.close();
-          chrome.extension.getBackgroundPage().notificationOnDisplay = false;
-        }
+      var closeTimer = setTimeout(function(){
+        scrollNotification();
+        setupAutoClose();
       }, time);
       window.onclick = function() {
         clearTimeout(closeTimer)
@@ -132,7 +141,7 @@
     var name = jQuery("<span><a href='http://twitter.com/" + screenName + 
                       "'>" + screenName +"</a></span>").addClass("name");
     var text = jQuery("<span>" + tweetText +"</span>").addClass("text");
-    var footer = jQuery("<div class='tweetfooter'></div>");
+    var footer = jQuery("<div class='tweetfooter'><div class='tweetshadow'></div></div>");
     var timestamp = jQuery("<span>" + prettyDate(createdAt) +"</span>").addClass("timestamp").
                         click(function(){
                           openTweetTab("http://twitter.com/" + screenName + "/status/" + tweetId);
@@ -146,15 +155,30 @@
   
   $(function() {
     var notification = notificationQueue.pop();
+    setInterval(function(){
+      updateNotificationCount();
+    }, 500);
     if (notification.id) {
       renderTweet(notification, $(".alertArea"));
     }
     setupAutoClose();
+    $("#notificationNext").click(function(){
+      if (notificationQueue.length > 0) 
+        scrollNotification();
+      else
+        window.close();
+    });
   });
   </script>
 </head>
 <body>
-   <div class="alertArea"></div>
+   <div class="alertArea">
+    <div id="notificationStatus">
+      <!--<span id="notificationPrev" class="notificationNav"> Prev </span>-->
+      <span id="notificationNext" class="notificationNav"> Next </span>
+      <span id="notificationCount"></span>
+    </div>
+   </div>
    <script>
      var _gaq = _gaq || [];
      _gaq.push(['_setAccount', 'UA-16053252-4']);

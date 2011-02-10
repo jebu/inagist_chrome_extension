@@ -1,33 +1,64 @@
 html, body {
-  margin: 0;
-  padding: 0;
+  margin:0px;
+  padding:0px;
   font-family: Helvetica, Arial, sans-serif;
   overflow: hidden;
 }
 
 .alertArea{
   height: 110px;
-  background-color: #eeeeee;
+  width: 100%;
+  background-color: #efefef;
+  overflow: hidden;
+}
+
+#notificationStatus{
+  background-color: #444;
+  opacity: 0.75;
+  position:fixed;
+  left: 0px;
+  bottom: 0px;
+  height: 20px;
+  width: 30%;
+  border-top-right-radius: 10px;
+  -webkit-box-shadow: 0 0 2px 2px rgba(20,20,20,0.9);
+  z-index: 100;
+  color: #fff;
+  font-family: georgia;
+  font-size: 12px;
+}
+
+#notificationCount{
+  float: right;
+  margin-right: 10px;
+}
+
+.notificationNav{
+  background-color: #111;
+  padding: 2px;
+  font-size: 10px;
+  cursor: pointer;
+  margin-left: 8px;
+  margin-top: 2px;
+  -webkit-box-shadow: 0 0 3px rgba(20,20,20,0.9);
 }
 
 .tweet {
-  font-size: 9pt;
-  background-color: #eeeeee;
-  margin: 2px;
+  font-size: 12px;
+  background-color: #efefef;
   position: absolute;
   top: 0px;
   left: 0px;
   z-index: 0;
-  width: 100%;
-  height: 100%
+  height: 100%;
+  overflow: hidden;
 }
 
 .tweet img {
   float: left;
   height: 48px;
   width: 48px;
-  margin-right: 4px;
-  margin-top: 4px;
+  margin: 4px;
 }
 
 .tweet .name {
@@ -60,12 +91,25 @@ html, body {
   margin-right: 2px;
 }
 
-.tweet .tweetfooter{
-  margin-top: 5px;
-}
-
 .tweet_overlay {
   z-index: 50;
+}
+
+.tweetfooter{
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+
+.tweetshadow{
+  background-color: #444;
+  opacity: 0.65;
+  float:left;
+  height: 20px;
+  width: 30%;
+  margin-right: 10px;
+  border-top-right-radius: 10px;
+  -webkit-box-shadow: 0 0 2px 2px rgba(20,20,20,0.9);
 }
 
 .actionbar .action {
@@ -116,4 +160,19 @@ html, body {
   height: 24px;
   width: 24px;
   margin-right: 3px;
+}
+
+@-webkit-keyframes rollleft{
+  0% {
+    left: 0;
+  }
+  100% {
+    left: 300px;
+  }
+}
+
+.animate_left{
+  -webkit-animation-name: rollleft;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-timing-function: ease-in;
 }
