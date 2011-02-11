@@ -32,6 +32,9 @@ function showHtml() {
     var notification = webkitNotifications.createHTMLNotification(
       'tweets_notifier.html'
     );
+    notification.onclose = function() {
+      notificationOnDisplay = false;
+    };
     notification.show();
   }
 }
