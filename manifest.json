@@ -1,6 +1,6 @@
 {
   "name": "inagist.com",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "inagist.com notification extension",
   "browser_action": {
     "default_icon": "img/inagist19.png"
