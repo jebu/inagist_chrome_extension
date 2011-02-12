@@ -13,19 +13,19 @@ html, body {
 }
 
 #notificationStatus{
-  background-color: #444;
-  opacity: 0.75;
+  opacity: 0.9;
   position:fixed;
-  left: 0px;
+  right: 0px;
   bottom: 0px;
   height: 20px;
   width: 22%;
-  border-top-right-radius: 10px;
-  -webkit-box-shadow: 0 0 2px 2px rgba(20,20,20,0.9);
   z-index: 100;
   color: #fff;
   font-family: georgia;
   font-size: 12px;
+  border-top-left-radius: 10px;
+  -webkit-box-shadow: 0 0 2px 2px rgba(20, 20, 20, 0.9);
+  background: rgba(4, 4, 4, 0.9) -webkit-gradient(linear, 80% 100%, 100% 0, from(rgba(4, 4, 4, 0.9)), to(rgba(20, 20, 20, 0.9)));
 }
 
 #notificationCount{
@@ -34,18 +34,16 @@ html, body {
 }
 
 .notificationNav{
-  background-color: #111;
   padding: 2px;
   font-size: 10px;
   cursor: pointer;
   margin-left: 3px;
   margin-top: 2px;
-  -webkit-box-shadow: 0 0 3px rgba(20,20,20,0.9);
 }
 
 .tweet {
   font-size: 12px;
-  background-color: #efefef;
+  background: rgba(239, 239, 239, 0.9) -webkit-gradient(radial, 95% 99%, 10, 85% 93%, 60, from(rgba(98, 98, 98, 0.9)), to(rgba(239, 239, 239, 0.9)));
   position: absolute;
   top: 0px;
   left: 0px;
@@ -90,6 +88,10 @@ html, body {
 .tweet .actionbar{
   float: right;
   margin-right: 2px;
+  background: rgba(150, 150, 150, 0.9);
+  padding-top: 2px;
+  padding-bottom: 3px;
+  border-radius: 2px;
 }
 
 .tweet_overlay {
@@ -100,21 +102,13 @@ html, body {
   position: absolute;
   bottom: 0px;
   width: 100%;
+  padding-right: 24%;
+  padding-left: 2px;
+  height: 20px;
 }
 
 .tweetNext{
   z-index: 25;
-}
-
-.tweetshadow{
-  background-color: #444;
-  opacity: 0.65;
-  float:left;
-  height: 20px;
-  width: 22%;
-  margin-right: 10px;
-  border-top-right-radius: 10px;
-  -webkit-box-shadow: 0 0 2px 2px rgba(20,20,20,0.9);
 }
 
 .tweetprev{

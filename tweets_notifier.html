@@ -179,7 +179,7 @@
     var name = jQuery("<span><a href='http://twitter.com/" + screenName + 
                       "'>" + screenName +"</a></span>").addClass("name");
     var text = jQuery("<span>" + tweetText +"</span>").addClass("text");
-    var footer = jQuery("<div class='tweetfooter'><div class='tweetshadow'></div></div>");
+    var footer = jQuery("<div class='tweetfooter'></div>");
     var timestamp = jQuery("<span>" + prettyDate(createdAt) +"</span>").addClass("timestamp").
                         click(function(){
                           openTweetTab("http://twitter.com/" + screenName + "/status/" + tweetId);
