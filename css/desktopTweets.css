@@ -13,7 +13,7 @@ html, body {
 }
 
 #notificationStatus{
-  opacity: 0.9;
+  opacity: 0.45;
   position:fixed;
   right: 0px;
   bottom: 0px;
@@ -43,7 +43,7 @@ html, body {
 
 .tweet {
   font-size: 12px;
-  background: rgba(239, 239, 239, 0.9) -webkit-gradient(radial, 95% 99%, 10, 85% 93%, 60, from(rgba(98, 98, 98, 0.9)), to(rgba(239, 239, 239, 0.9)));
+  background: rgba(239, 239, 239, 0.9) -webkit-gradient(linear, 100% 100%, 50% 35%, from(rgba(98, 98, 98, 0.9)), to(rgba(239, 239, 239, 0.9)));
   position: absolute;
   top: 0px;
   left: 0px;
@@ -88,10 +88,8 @@ html, body {
 .tweet .actionbar{
   float: right;
   margin-right: 2px;
-  background: rgba(150, 150, 150, 0.9);
   padding-top: 2px;
   padding-bottom: 3px;
-  border-radius: 2px;
 }
 
 .tweet_overlay {
