@@ -70,10 +70,8 @@
       renderNextNotification();
       animateScroll(".tweet_overlay", "animate_left");
       updateNotificationCount();
-    } else {
+    } else 
       window.close();
-      chrome.extension.getBackgroundPage().notificationOnDisplay = false;
-    }
   }
 
   function scrollPrevNotification(){
@@ -200,10 +198,8 @@
     $("#notificationNext").click(function(){
       if ((notificationQueue.length + archiveCount) > 0) 
         scrollNotification();
-      else{
+      else
         window.close();
-        chrome.extension.getBackgroundPage().notificationOnDisplay = false;
-      }
     });
     $("#notificationPrev").click(function(){
       if (archivalQueue.length > (archiveCount+1)) 

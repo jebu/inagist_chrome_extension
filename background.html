@@ -27,14 +27,10 @@ function show(message, image, title) {
 }
 
 function showHtml() {
-  if (!notificationOnDisplay){
-    notificationOnDisplay = true;
+  if (chrome.extension.getViews({type: "notification"}).length == 0){
     var notification = webkitNotifications.createHTMLNotification(
       'tweets_notifier.html'
     );
-    notification.onclose = function() {
-      notificationOnDisplay = false;
-    };
     notification.show();
   }
 }
@@ -230,7 +226,6 @@ var autoTracked = [];
 var autoTrackedChannel = [];
 var searchTimer = undefined;
 var connectedUser = undefined;
-var notificationOnDisplay = false;
 
 chrome.browserAction.onClicked.addListener(toggleConnection);
 iconAlert([200, 10, 10, 228], "Off");
