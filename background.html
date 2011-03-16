@@ -107,7 +107,8 @@ function sendSearchTerms() {
 }
 
 function connect() {
-  autoTrackedChannel = autoTracked = [];
+  autoTrackedChannel = [], 
+  autoTracked = [];
   if ("WebSocket" in window) {
     var url = Options.get("websocketURL");
     if (Options.getBoolean("encrypt"))
