@@ -180,7 +180,7 @@
     var footer = jQuery("<div class='tweetfooter'></div>");
     var timestamp = jQuery("<span>" + prettyDate(createdAt) +"</span>").addClass("timestamp").
                         click(function(){
-                          openTweetTab("http://twitter.com/" + screenName + "/status/" + tweetId);
+                          openTweetTab("http://inagist.com/" + screenName + "/" + tweetId);
                         });
     var contextSpan = jQuery("<span class='tweetcontext'>" + footerContext + "</span>");
     footer.append(timestamp).append(contextSpan);
