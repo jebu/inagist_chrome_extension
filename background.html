@@ -77,6 +77,14 @@ function trimElement(element) {
   return element.trim();
 }
 
+function addSearchTerm(Text){
+  if ((typeof(Text) != 'undefined') && (Text != '')) {
+    var searchTerms = Options.get("searchText").split(",").map(trimElement);
+    searchTerms.push(Text);
+    Options.set("searchText", searchTerms.join(",")); 
+  }
+}
+
 function getSearchTerms(){
   var searchTerms = Options.get("searchText").split(",").map(trimElement);
   var ignoredTrends = [];
@@ -215,6 +223,15 @@ function reConnect() {
   toggleConnection();
 }
 
+function onClickHandler(info, tab) {
+  var sel = info.selectionText;
+  if (sel != undefined){
+    var bg = chrome.extension.getBackgroundPage();
+    bg.addSearchTerm(sel);
+    bg.sendSearchTerms();
+  }
+}
+
 Options.init();
 chrome.idle.onStateChanged.addListener(function(newState){
   console.log("State changed to " + newState);
@@ -238,6 +255,14 @@ if (typeof Options.get("userid") == 'undefined')
       connect();
     },
     function(){});
+
+if (chrome.contextMenus) {
+  chrome.contextMenus.create({'title': "Add to In-A-Gist",
+                              'documentUrlPatterns': [ 'http://*/*', 'https://*/*' ],
+                              'onclick': onClickHandler,
+                              'contexts': ['selection']});
+}
+
 connectedUser = Options.get("userid");
 if (connectedUser)
   connect();

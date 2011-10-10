@@ -1,11 +1,12 @@
 {
   "name": "inagist.com",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "inagist.com notification extension",
   "browser_action": {
     "default_icon": "img/inagist19.png"
   },
   "permissions": [
+    "contextMenus",
     "notifications",
     "tabs",
     "idle",
