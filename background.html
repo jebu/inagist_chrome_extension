@@ -257,7 +257,7 @@ if (typeof Options.get("userid") == 'undefined')
     function(){});
 
 if (chrome.contextMenus) {
-  chrome.contextMenus.create({'title': "Add to In-A-Gist",
+  chrome.contextMenus.create({'title': "Add to In-A-Gist search",
                               'documentUrlPatterns': [ 'http://*/*', 'https://*/*' ],
                               'onclick': onClickHandler,
                               'contexts': ['selection']});
